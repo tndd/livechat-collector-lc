@@ -63,7 +63,8 @@ def store_videos_search_list(channel_id, videos_search_items):
     print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
 
 
-def main():
+def task_videos_search_list():
+    # download channel_list's video data and store.
     with open('channel.json', 'r') as f:
         channel_items = json.load(f)
     for talent_name, channel_id in channel_items.items():
@@ -73,6 +74,10 @@ def main():
             continue
 
         store_videos_search_list(channel_id, videos_search_items)
+
+
+def main():
+    task_videos_search_list()
 
 
 if __name__ == "__main__":
