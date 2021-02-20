@@ -3,9 +3,11 @@ import os
 
 os.makedirs('channel-video-list', exist_ok=True)
 
+### Mock data ###
 fname = '.exam/output_youtube_data_api_search_list.json'
 with open(fname, 'r') as f:
     data = json.loads(f.read())
+#################
 
 channel_data = {}
 channel_data['channel_id'] = data['items'][0]['snippet']['channelId']
