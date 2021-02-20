@@ -53,19 +53,21 @@ def get_videos_search_list(channel_id):
     while next_page_token != NEXT_PAGE_TOKEN_IS_EMPTY:
         next_page_token, video_items = get_videos_search_list_part(channel_id, next_page_token)
         videos_items.extend(video_items)
-    print(f"[COMPLETE]: Downloaded SEARCH_LIST \"{channel_id}\"")
+    print(f"[Downloaded]: SEARCH_LIST \"{channel_id}\"")
     return videos_items
 
 
 def main():
     channel_id = 'UCvaTdHTWBGv3MKj3KVqJVCw'
-    videos_items = get_videos_search_list(channel_id)
+    for c_id in [channel_id]:
+        videos_items = get_videos_search_list(c_id)
 
-    if videos_items == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
-        return
+        if videos_items == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
+            continue
 
-    with open(f"{SAVE_DIR_PATH}/{channel_id}.json", 'w') as f:
-        json.dump(videos_items, f, ensure_ascii=False, indent=4)
+        with open(f"{SAVE_DIR_PATH}/{channel_id}.json", 'w') as f:
+            json.dump(videos_items, f, ensure_ascii=False, indent=4)
+        print(f"[STORED]: SEARCH_LIST \"{c_id}\"")
 
 
 if __name__ == "__main__":
