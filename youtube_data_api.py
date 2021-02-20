@@ -26,17 +26,22 @@ def is_exist_youtube_data_api_search(channel_id):
     return os.path.exists(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json")
 
 
-def get_channel_search_list_from_channel_id_part(channnel_id, next_page_token=None):
+def get_youtube_api_client():
     api_service_name = "youtube"
     api_version = "v3"
     api_key = os.environ.get("YOUTUBE_DATA_API_KEY")
 
-    youtube = googleapiclient.discovery.build(
+    youtube_api_client = googleapiclient.discovery.build(
         api_service_name,
         api_version,
         developerKey=api_key
     )
-    request = youtube.search().list(
+    return youtube_api_client
+
+
+def get_channel_search_list_from_channel_id_part(channnel_id, next_page_token=None):
+    youtube_api_client = get_youtube_api_client()
+    request = youtube_api_client.search().list(
         part="snippet",
         channelId=channnel_id,
         eventType="completed",
