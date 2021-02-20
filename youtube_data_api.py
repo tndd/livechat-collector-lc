@@ -64,8 +64,9 @@ def store_videos_search_list(channel_id, videos_search_items):
 
 
 def main():
-    channel_id_mock = 'UCvaTdHTWBGv3MKj3KVqJVCw'
-    for channel_id in [channel_id_mock]:
+    with open('channel.json', 'r') as f:
+        channel_items = json.load(f)
+    for talent_name, channel_id in channel_items.items():
         videos_search_items = get_videos_search_list_from_channel_id(channel_id)
 
         if videos_search_items == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
