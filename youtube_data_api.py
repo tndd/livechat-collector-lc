@@ -9,14 +9,14 @@ import googleapiclient.errors
 NEXT_PAGE_TOKEN_IS_EMPTY = 'empty_token'
 SEARCH_LIST_DOWNLOAD_IS_COMPLETED = 'search_list_is_downloaded'
 
-SAVE_DIR_PATH = '.youtube_data_api/search'
+SAVE_DIR_PATH_SEARCH = '.youtube_data_api/search'
 
 load_dotenv('.env')
-os.makedirs(SAVE_DIR_PATH, exist_ok=True)
+os.makedirs(SAVE_DIR_PATH_SEARCH, exist_ok=True)
 
 
 def is_exist_youtube_data_api_search(channel_id):
-    return os.path.exists(f"{SAVE_DIR_PATH}/{channel_id}.json")
+    return os.path.exists(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json")
 
 
 def get_videos_search_list_from_channel_id_part(channnel_id, next_page_token=None):
@@ -58,7 +58,7 @@ def get_videos_search_list_from_channel_id(channel_id):
 
 
 def store_videos_search_list(channel_id, videos_search_items):
-    with open(f"{SAVE_DIR_PATH}/{channel_id}.json", 'w') as f:
+    with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'w') as f:
         json.dump(videos_search_items, f, ensure_ascii=False, indent=4)
     print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
 
