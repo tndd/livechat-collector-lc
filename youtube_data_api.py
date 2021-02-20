@@ -63,8 +63,8 @@ def get_channel_search_list_from_channel_id(channel_id):
     next_page_token = None
     channel_search_items = []
     while next_page_token != NEXT_PAGE_TOKEN_IS_EMPTY:
-        next_page_token, channel_search_items = get_channel_search_list_from_channel_id_part(channel_id, next_page_token)
-        channel_search_items.extend(channel_search_items)
+        next_page_token, item = get_channel_search_list_from_channel_id_part(channel_id, next_page_token)
+        channel_search_items.extend(item)
     print(f"[Downloaded]: SEARCH_LIST \"{channel_id}\"")
     return channel_search_items
 
