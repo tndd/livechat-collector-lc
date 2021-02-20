@@ -49,25 +49,29 @@ def get_videos_search_list_from_channel_id(channel_id):
         return SEARCH_LIST_DOWNLOAD_IS_COMPLETED
 
     next_page_token = None
-    videos_items = []
+    videos_search_items = []
     while next_page_token != NEXT_PAGE_TOKEN_IS_EMPTY:
         next_page_token, video_items = get_videos_search_list_from_channel_id_part(channel_id, next_page_token)
-        videos_items.extend(video_items)
+        videos_search_items.extend(video_items)
     print(f"[Downloaded]: SEARCH_LIST \"{channel_id}\"")
-    return videos_items
+    return videos_search_items
+
+
+def store_videos_search_list(channel_id, videos_search_items):
+    with open(f"{SAVE_DIR_PATH}/{channel_id}.json", 'w') as f:
+        json.dump(videos_search_items, f, ensure_ascii=False, indent=4)
+    print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
 
 
 def main():
-    channel_id = 'UCvaTdHTWBGv3MKj3KVqJVCw'
-    for c_id in [channel_id]:
-        videos_items = get_videos_search_list_from_channel_id(c_id)
+    channel_id_mock = 'UCvaTdHTWBGv3MKj3KVqJVCw'
+    for channel_id in [channel_id_mock]:
+        videos_search_items = get_videos_search_list_from_channel_id(channel_id)
 
-        if videos_items == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
+        if videos_search_items == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
             continue
 
-        with open(f"{SAVE_DIR_PATH}/{channel_id}.json", 'w') as f:
-            json.dump(videos_items, f, ensure_ascii=False, indent=4)
-        print(f"[STORED]: SEARCH_LIST \"{c_id}\"")
+        store_videos_search_list(channel_id, videos_search_items)
 
 
 if __name__ == "__main__":
