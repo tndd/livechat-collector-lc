@@ -6,13 +6,20 @@ from dotenv import load_dotenv
 import googleapiclient.discovery
 import googleapiclient.errors
 
+
 NEXT_PAGE_TOKEN_IS_EMPTY = 'empty_token'
 SEARCH_LIST_DOWNLOAD_IS_COMPLETED = 'search_list_is_downloaded'
 
 SAVE_DIR_PATH_SEARCH = '.youtube_data_api/search'
+SAVE_DIR_PATH_VIDEOS = '.youtube_data_api/videos'
 
 load_dotenv('.env')
 os.makedirs(SAVE_DIR_PATH_SEARCH, exist_ok=True)
+os.makedirs(SAVE_DIR_PATH_VIDEOS, exist_ok=True)
+
+
+class NotExistSearchListDataError(Exception):
+    pass
 
 
 def is_exist_youtube_data_api_search(channel_id):
@@ -76,8 +83,26 @@ def task_channel_search_list():
         store_channel_search_list(channel_id, channel_search_items)
 
 
+def get_video_id_list_from_channel_id(channel_id):
+    try:
+        with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'r') as f:
+            search_list_items = json.load(f)
+    except FileNotFoundError as e:
+        message = f"[ERROR] Channel id: \"{channel_id}\" search list data is not exist."
+        raise NotExistSearchListDataError(message)
+    except Exception as e:
+        raise e
+
+    video_ids = []
+    for item in search_list_items:
+        video_ids.append(item['id']['videoId'])
+
+    return video_ids
+
+
 def main():
-    task_channel_search_list()
+    # task_channel_search_list()
+    print(get_video_id_list_from_channel_id('UC1DCedRgGHBdm81E1llLhOQa'))
 
 
 if __name__ == "__main__":
