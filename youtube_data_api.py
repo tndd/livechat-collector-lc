@@ -74,7 +74,7 @@ def store_channel_search_list(channel_id, channel_search_items):
     print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
 
 
-def task_channel_search_list():
+def download_channel_search_list():
     # download channel_list's video data and store.
     with open('channel.json', 'r') as f:
         channel_items = json.load(f)
@@ -123,7 +123,7 @@ def store_video_item(channel_id, video_id, video_item):
     print(f"[STORED]: VIDEO_ITEM \"{video_id}\"")
 
 
-def download_video_items_of_channel_id(channel_id):
+def download_video_items_from_channel_id(channel_id):
     video_ids = get_video_ids_from_channel_id(channel_id)
     for video_id in video_ids:
         video_item = get_video_item_from_video_id(video_id)
@@ -132,9 +132,9 @@ def download_video_items_of_channel_id(channel_id):
 
 
 def main():
-    # task_channel_search_list()
+    # download_channel_search_list()
     channel_id = 'UCvaTdHTWBGv3MKj3KVqJVCw'
-    download_video_items_of_channel_id(channel_id)
+    download_video_items_from_channel_id(channel_id)
 
 
 if __name__ == "__main__":
