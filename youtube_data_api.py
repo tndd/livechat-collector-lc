@@ -26,6 +26,9 @@ class NotExistSearchListDataError(Exception):
 class NotExistVideosDataError(Exception):
     pass
 
+class NotExistChannelsDataError(Exception):
+    pass
+
 
 def is_exist_youtube_data_api_search(channel_id):
     return os.path.exists(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json")
@@ -57,6 +60,18 @@ def load_youtube_data_api_videos_data(video_id):
     except Exception as e:
         raise e
     return videos_data
+
+
+def load_channels_data():
+    try:
+        with open('channel.json', 'r') as f:
+            channels_data = json.load(f)
+    except FileNotFoundError as e:
+        message = '[ERROR] Channels data is not exist.'
+        raise NotExistChannelsDataError(message)
+    except Exception as e:
+        raise e
+    return channels_data
 
 
 def get_youtube_api_client():
