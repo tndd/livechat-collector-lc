@@ -115,11 +115,17 @@ def get_video_item_from_video_id(video_id):
     return response
 
 
+def store_channel_search_list(video_id, video_item):
+    with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'w') as f:
+        json.dump(video_item, f, ensure_ascii=False, indent=4)
+    print(f"[STORED]: VIDEO_ITEM \"{video_id}\"")
+
+
 def main():
     # task_channel_search_list()
-    a = get_video_item_from_video_id("ZK1GXnz-1Lw")
-    with open('out.json', 'w') as f:
-        json.dump(a, f, indent=4, ensure_ascii=False)
+    video_id = "ZK1GXnz-1Lw"
+    video_item = get_video_item_from_video_id(video_id)
+    store_channel_search_list(video_id, video_item)
 
 
 if __name__ == "__main__":
