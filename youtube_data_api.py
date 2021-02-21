@@ -48,7 +48,7 @@ def get_channel_search_list_from_channel_id_part(channnel_id, next_page_token=No
         maxResults=50,
         order="date",
         type="video",
-        pageToken = next_page_token
+        pageToken=next_page_token
     )
     response = request.execute()
 
