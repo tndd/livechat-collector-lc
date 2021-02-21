@@ -63,31 +63,31 @@ def get_channel_search_list_from_channel_id(channel_id):
         return SEARCH_LIST_DOWNLOAD_IS_COMPLETED
 
     next_page_token = None
-    channel_search_items = []
+    search_list = []
     while next_page_token != NEXT_PAGE_TOKEN_IS_EMPTY:
-        next_page_token, item = get_channel_search_list_from_channel_id_part(channel_id, next_page_token)
-        channel_search_items.extend(item)
+        next_page_token, search_list_part = get_channel_search_list_from_channel_id_part(channel_id, next_page_token)
+        search_list.extend(search_list_part)
     print(f"[Downloaded]: SEARCH_LIST \"{channel_id}\"")
-    return channel_search_items
+    return search_list
 
 
-def store_channel_search_list(channel_id, channel_search_items):
+def store_channel_search_list(channel_id, search_list):
     with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'w') as f:
-        json.dump(channel_search_items, f, ensure_ascii=False, indent=4)
+        json.dump(search_list, f, ensure_ascii=False, indent=4)
     print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
 
 
 def download_channel_search_list():
-    # download channel_list's video data and store.
+    # get channel_list's video data and store.
     with open('channel.json', 'r') as f:
         channel_items = json.load(f)
     for talent_name, channel_id in channel_items.items():
-        channel_search_items = get_channel_search_list_from_channel_id(channel_id)
+        search_list = get_channel_search_list_from_channel_id(channel_id)
 
-        if channel_search_items == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
+        if search_list == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
             continue
 
-        store_channel_search_list(channel_id, channel_search_items)
+        store_channel_search_list(channel_id, search_list)
 
 
 def load_youtube_data_api_search_list(channel_id):
