@@ -90,18 +90,22 @@ def download_channel_search_list():
         store_channel_search_list(channel_id, channel_search_items)
 
 
-def get_video_ids_from_channel_id(channel_id):
+def load_youtube_data_api_search_list(channel_id):
     try:
         with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'r') as f:
-            search_list_items = json.load(f)
+            search_list = json.load(f)
     except FileNotFoundError as e:
         message = f"[ERROR] Channel id: \"{channel_id}\" search list data is not exist."
         raise NotExistSearchListDataError(message)
     except Exception as e:
         raise e
+    return search_list
 
+
+def get_video_ids_from_channel_id(channel_id):
+    search_list = load_youtube_data_api_search_list(channel_id)
     video_ids = []
-    for item in search_list_items:
+    for item in search_list:
         video_ids.append(item['id']['videoId'])
 
     return video_ids
@@ -136,6 +140,10 @@ def download_video_items_from_channel_id(channel_id):
         video_item = get_video_item_from_video_id(video_id)
         store_video_item(video_id, video_item)
     print(f"[Downloaded]: VIDEO_ITEMS of \"{channel_id}\"")
+
+
+def make_database_resource_from_channel_id(channel_id):
+    pass
 
 
 def main():
