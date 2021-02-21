@@ -121,9 +121,16 @@ def store_video_item(video_id, video_item):
     print(f"[STORED]: VIDEO_ITEM \"{video_id}\"")
 
 
+def is_exist_youtube_data_api_video(video_id):
+    return os.path.exists(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json")
+
+
 def download_video_items_from_channel_id(channel_id):
     video_ids = get_video_ids_from_channel_id(channel_id)
     for video_id in video_ids:
+        if is_exist_youtube_data_api_video(video_id):
+            print(f"[SKIP]: VIDEO_ITEM \"{video_id}\" have already been downloaded.")
+            continue
         video_item = get_video_item_from_video_id(video_id)
         store_video_item(video_id, video_item)
     print(f"[Downloaded]: VIDEO_ITEMS of \"{channel_id}\"")
