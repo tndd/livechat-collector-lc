@@ -15,6 +15,7 @@ SAVE_DIR_PATH_VIDEOS = '.youtube_data_api/videos'
 
 load_dotenv('.env')
 os.makedirs(SAVE_DIR_PATH_SEARCH, exist_ok=True)
+os.makedirs(SAVE_DIR_PATH_VIDEOS, exist_ok=True)
 
 
 class NotExistSearchListDataError(Exception):
@@ -114,11 +115,8 @@ def get_video_item_from_video_id(video_id):
     return response
 
 
-def store_video_item(channel_id, video_id, video_item):
-    save_path = f"{SAVE_DIR_PATH_VIDEOS}/{channel_id}"
-    os.makedirs(save_path, exist_ok=True)
-
-    with open(f"{save_path}/{video_id}.json", 'w') as f:
+def store_video_item(video_id, video_item):
+    with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'w') as f:
         json.dump(video_item, f, ensure_ascii=False, indent=4)
     print(f"[STORED]: VIDEO_ITEM \"{video_id}\"")
 
@@ -127,7 +125,7 @@ def download_video_items_from_channel_id(channel_id):
     video_ids = get_video_ids_from_channel_id(channel_id)
     for video_id in video_ids:
         video_item = get_video_item_from_video_id(video_id)
-        store_video_item(channel_id, video_id, video_item)
+        store_video_item(video_id, video_item)
     print(f"[Downloaded]: VIDEO_ITEMS of \"{channel_id}\"")
 
 
