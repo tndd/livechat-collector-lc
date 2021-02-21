@@ -31,6 +31,34 @@ def is_exist_youtube_data_api_search(channel_id):
     return os.path.exists(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json")
 
 
+def is_exist_youtube_data_api_video(video_id):
+    return os.path.exists(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json")
+
+
+def load_youtube_data_api_search_list(channel_id):
+    try:
+        with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'r') as f:
+            search_list = json.load(f)
+    except FileNotFoundError as e:
+        message = f"[ERROR] Channel id: \"{channel_id}\" search list data is not exist."
+        raise NotExistSearchListDataError(message)
+    except Exception as e:
+        raise e
+    return search_list
+
+
+def load_youtube_data_api_videos_data(video_id):
+    try:
+        with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'r') as f:
+            videos_data = json.load(f)
+    except FileNotFoundError as e:
+        message = f"[ERROR] Video id: \"{video_id}\" videos data is not exist."
+        raise NotExistVideosDataError(message)
+    except Exception as e:
+        raise e
+    return videos_data
+
+
 def get_youtube_api_client():
     api_service_name = "youtube"
     api_version = "v3"
@@ -74,49 +102,6 @@ def get_channel_search_list_from_channel_id(channel_id):
     return search_list
 
 
-def store_channel_search_list(channel_id, search_list):
-    with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'w') as f:
-        json.dump(search_list, f, ensure_ascii=False, indent=4)
-    print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
-
-
-def download_channel_search_list():
-    # get channel_list's video data and store.
-    with open('channel.json', 'r') as f:
-        channel_items = json.load(f)
-    for talent_name, channel_id in channel_items.items():
-        search_list = get_channel_search_list_from_channel_id(channel_id)
-
-        if search_list == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
-            continue
-
-        store_channel_search_list(channel_id, search_list)
-
-
-def load_youtube_data_api_search_list(channel_id):
-    try:
-        with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'r') as f:
-            search_list = json.load(f)
-    except FileNotFoundError as e:
-        message = f"[ERROR] Channel id: \"{channel_id}\" search list data is not exist."
-        raise NotExistSearchListDataError(message)
-    except Exception as e:
-        raise e
-    return search_list
-
-
-def load_youtube_data_api_videos_data(video_id):
-    try:
-        with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'r') as f:
-            videos_data = json.load(f)
-    except FileNotFoundError as e:
-        message = f"[ERROR] Video id: \"{video_id}\" videos data is not exist."
-        raise NotExistVideosDataError(message)
-    except Exception as e:
-        raise e
-    return videos_data
-
-
 def get_video_ids_from_channel_id(channel_id):
     search_list = load_youtube_data_api_search_list(channel_id)
     video_ids = []
@@ -136,14 +121,29 @@ def get_video_item_from_video_id(video_id):
     return response
 
 
+def store_channel_search_list(channel_id, search_list):
+    with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'w') as f:
+        json.dump(search_list, f, ensure_ascii=False, indent=4)
+    print(f"[STORED]: SEARCH_LIST \"{channel_id}\"")
+
+
 def store_video_item(video_id, video_item):
     with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'w') as f:
         json.dump(video_item, f, ensure_ascii=False, indent=4)
     print(f"[STORED]: VIDEO_ITEM \"{video_id}\"")
 
 
-def is_exist_youtube_data_api_video(video_id):
-    return os.path.exists(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json")
+def download_channel_search_list():
+    # get channel_list's video data and store.
+    with open('channel.json', 'r') as f:
+        channel_items = json.load(f)
+    for talent_name, channel_id in channel_items.items():
+        search_list = get_channel_search_list_from_channel_id(channel_id)
+
+        if search_list == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
+            continue
+
+        store_channel_search_list(channel_id, search_list)
 
 
 def download_video_items_from_channel_id(channel_id):
