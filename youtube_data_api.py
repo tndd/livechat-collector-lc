@@ -23,6 +23,9 @@ os.makedirs(SAVE_DIR_PATH_DB_RESOURCE, exist_ok=True)
 class NotExistSearchListDataError(Exception):
     pass
 
+class NotExistVideosDataError(Exception):
+    pass
+
 
 def is_exist_youtube_data_api_search(channel_id):
     return os.path.exists(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json")
@@ -100,6 +103,18 @@ def load_youtube_data_api_search_list(channel_id):
     except Exception as e:
         raise e
     return search_list
+
+
+def load_youtube_data_api_videos_data(video_id):
+    try:
+        with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'r') as f:
+            videos_data = json.load(f)
+    except FileNotFoundError as e:
+        message = f"[ERROR] Video id: \"{video_id}\" videos data is not exist."
+        raise NotExistVideosDataError(message)
+    except Exception as e:
+        raise e
+    return videos_data
 
 
 def get_video_ids_from_channel_id(channel_id):
