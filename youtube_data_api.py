@@ -88,7 +88,7 @@ def task_channel_search_list():
         store_channel_search_list(channel_id, channel_search_items)
 
 
-def get_video_id_list_from_channel_id(channel_id):
+def get_video_ids_from_channel_id(channel_id):
     try:
         with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'r') as f:
             search_list_items = json.load(f)
@@ -105,7 +105,7 @@ def get_video_id_list_from_channel_id(channel_id):
     return video_ids
 
 
-def get_video_items_from_video_id(video_id):
+def get_video_item_from_video_id(video_id):
     youtube_api_client = get_youtube_api_client()
     request = youtube_api_client.videos().list(
         part="snippet,contentDetails,id,liveStreamingDetails,localizations,player,recordingDetails,statistics,status,topicDetails,recordingDetails",
@@ -117,7 +117,7 @@ def get_video_items_from_video_id(video_id):
 
 def main():
     # task_channel_search_list()
-    a = get_video_items_from_video_id("ZK1GXnz-1Lw")
+    a = get_video_item_from_video_id("ZK1GXnz-1Lw")
     with open('out.json', 'w') as f:
         json.dump(a, f, indent=4, ensure_ascii=False)
 
