@@ -23,8 +23,10 @@ os.makedirs(SAVE_DIR_PATH_DB_RESOURCE, exist_ok=True)
 class NotExistSearchListDataError(Exception):
     pass
 
+
 class NotExistVideosDataError(Exception):
     pass
+
 
 class NotExistChannelsDataError(Exception):
     pass
