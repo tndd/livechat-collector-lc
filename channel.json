@@ -1,33 +1,126 @@
 {
-    "sora": "UCp6993wxpyDPHUpavwDFqgg",
-    "roboko": "UCDqI2jOz0weumE8s7paEk6g",
-    "miko": "UC-hM6YJuNYVAmUWxeIr9FeA",
-    "meru": "UCD8HOxPs4Xvsm8H0ZxXGiBw",
-    "fubuki": "UCdn5BQ06XqgXoAxIhbqw5Rg",
-    "matsuri": "UCQ0UDLQCjY0rmuxCDE38FGg",
-    "haato": "UC1CfXB_kRs3C-zaeTG3oGyg",
-    "aki": "UCFTLzh12_nrtzqBPsTCqenA",
-    "aqua": "UC1opHUrw8rvnsadT-iGp7Cg",
-    "ayame": "UC7fk0CB07ly8oSl0aqKkqFg",
-    "choco": "UC1suqwovbL1kzsoaZgFZLKg",
-    "shion": "UCXTpFs_3PqI41qX2d9tL2Rw",
-    "subaru": "UCvzGlP9oQwU--Y0r9id_jnA",
-    "mio": "UCp-5t9SrOQwXMU7iIjQfARg",
-    "okayu": "UCvaTdHTWBGv3MKj3KVqJVCw",
-    "korone": "UChAnqc_AY5_I3Px5dig3X1Q",
-    "flare": "UCvInZx9h3jC2JzsIzoOebWg",
-    "noel": "UCdyqAaZDKHXg4Ahi7VENThQ",
-    "marine": "UCCzUftO8KOVkV4wQG1vkUvg",
-    "pekora": "UC1DCedRgGHBdm81E1llLhOQ",
-    "rushia": "UCl_gCybOJRIgOXw6Qb4qJzQ",
-    "suisei": "UC5CwaMl1eIgY8h02uZw7u8A",
-    "kanata": "UCZlDXzGoo7d44bwdNObFacg",
-    "coco": "UCS9uQI-jC3DE0L4IpXyvr6w",
-    "watame": "UCqm3BQLlJfvkTsX_hvm0UmA",
-    "towa": "UC1uv2Oq6kNxgATlCiez59hw",
-    "luna": "UCa9Y57gfeY0Zro_noHRVrnw",
-    "lamy": "UCFKOVgVbGmX65RxO3EtH3iw",
-    "nene": "UCAWSyEs_Io8MtpY3m-zqILA",
-    "botan": "UCUKD-uaobj9jiqB-VXt71mA",
-    "polka": "UCK9V2B22uJYu3N7eR_BT9QA"
+    "sora": {
+        "id": "UCp6993wxpyDPHUpavwDFqgg",
+        "name": "ときのそら"
+    },
+    "roboko": {
+        "id": "UCDqI2jOz0weumE8s7paEk6g",
+        "name": "ロボ子"
+    },
+    "miko": {
+        "id": "UC-hM6YJuNYVAmUWxeIr9FeA",
+        "name": "さくらみこ"
+    },
+    "meru": {
+        "id": "UCD8HOxPs4Xvsm8H0ZxXGiBw",
+        "name": "夜空メル"
+    },
+    "fubuki": {
+        "id": "UCdn5BQ06XqgXoAxIhbqw5Rg",
+        "name": "白上フブキ"
+    },
+    "matsuri": {
+        "id": "UCQ0UDLQCjY0rmuxCDE38FGg",
+        "name": "夏色まつり"
+    },
+    "haato": {
+        "id": "UC1CfXB_kRs3C-zaeTG3oGyg",
+        "name": "赤井はあと"
+    },
+    "aki": {
+        "id": "UCFTLzh12_nrtzqBPsTCqenA",
+        "name": "アキ・ローゼンタール"
+    },
+    "aqua": {
+        "id": "UC1opHUrw8rvnsadT-iGp7Cg",
+        "name": "湊あくあ"
+    },
+    "ayame": {
+        "id": "UC7fk0CB07ly8oSl0aqKkqFg",
+        "name": "百鬼あやめ"
+    },
+    "choco": {
+        "id": "UC1suqwovbL1kzsoaZgFZLKg",
+        "name": "癒月ちょこ"
+    },
+    "shion": {
+        "id": "UCXTpFs_3PqI41qX2d9tL2Rw",
+        "name": "紫咲シオン"
+    },
+    "subaru": {
+        "id": "UCvzGlP9oQwU--Y0r9id_jnA",
+        "name": "大空スバル"
+    },
+    "mio": {
+        "id": "UCp-5t9SrOQwXMU7iIjQfARg",
+        "name": "大神ミオ"
+    },
+    "okayu": {
+        "id": "UCvaTdHTWBGv3MKj3KVqJVCw",
+        "name": "猫又おかゆ"
+    },
+    "korone": {
+        "id": "UChAnqc_AY5_I3Px5dig3X1Q",
+        "name": "戌神ころね"
+    },
+    "flare": {
+        "id": "UCvInZx9h3jC2JzsIzoOebWg",
+        "name": "不知火フレア"
+    },
+    "noel": {
+        "id": "UCdyqAaZDKHXg4Ahi7VENThQ",
+        "name": "白銀ノエル"
+    },
+    "marine": {
+        "id": "UCCzUftO8KOVkV4wQG1vkUvg",
+        "name": "宝鐘マリン"
+    },
+    "pekora": {
+        "id": "UC1DCedRgGHBdm81E1llLhOQ",
+        "name": "兎田ぺこら"
+    },
+    "rushia": {
+        "id": "UCl_gCybOJRIgOXw6Qb4qJzQ",
+        "name": "潤羽るしあ"
+    },
+    "suisei": {
+        "id": "UC5CwaMl1eIgY8h02uZw7u8A",
+        "name": "星街すいせい"
+    },
+    "kanata": {
+        "id": "UCZlDXzGoo7d44bwdNObFacg",
+        "name": "天音かなた"
+    },
+    "coco": {
+        "id": "UCS9uQI-jC3DE0L4IpXyvr6w",
+        "name": "桐生ココ"
+    },
+    "watame": {
+        "id": "UCqm3BQLlJfvkTsX_hvm0UmA",
+        "name": "角巻わため"
+    },
+    "towa": {
+        "id": "UC1uv2Oq6kNxgATlCiez59hw",
+        "name": "常闇トワ"
+    },
+    "luna": {
+        "id": "UCa9Y57gfeY0Zro_noHRVrnw",
+        "name": "姫森ルーナ"
+    },
+    "lamy": {
+        "id": "UCFKOVgVbGmX65RxO3EtH3iw",
+        "name": "雪花ラミィ"
+    },
+    "nene": {
+        "id": "UCAWSyEs_Io8MtpY3m-zqILA",
+        "name": "桃鈴ねね"
+    },
+    "botan": {
+        "id": "UCUKD-uaobj9jiqB-VXt71mA",
+        "name": "獅白ぼたん"
+    },
+    "polka": {
+        "id": "UCK9V2B22uJYu3N7eR_BT9QA",
+        "name": "尾丸ポルカ"
+    }
 }
