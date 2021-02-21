@@ -115,7 +115,7 @@ def get_video_item_from_video_id(video_id):
     return response
 
 
-def store_channel_search_list(video_id, video_item):
+def store_video_item(video_id, video_item):
     with open(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json", 'w') as f:
         json.dump(video_item, f, ensure_ascii=False, indent=4)
     print(f"[STORED]: VIDEO_ITEM \"{video_id}\"")
