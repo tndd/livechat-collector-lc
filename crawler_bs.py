@@ -50,7 +50,7 @@ def download_y_initial_datas_from_channel_id(channel_id):
             store_y_initial_data(video_id, y_initial_data)
         except Exception as e:
             clear_y_initial_data(video_id)
-            print(e)
+            print(f"[ERROR]: Download Y_INITIAL_DATA \"{video_id}\" is missed.")
     print(f"[Completed]: Y_INITIAL_DATAS of \"{channel_id}\"")
 
 
