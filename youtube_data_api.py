@@ -12,12 +12,10 @@ SEARCH_LIST_DOWNLOAD_IS_COMPLETED = 'search_list_is_downloaded'
 
 SAVE_DIR_PATH_SEARCH = 'data/youtube_data_api/search'
 SAVE_DIR_PATH_VIDEOS = 'data/youtube_data_api/videos'
-SAVE_DIR_PATH_CHANNEL_VIDEOS = 'data/channel_videos'
 
 load_dotenv('.env')
 os.makedirs(SAVE_DIR_PATH_SEARCH, exist_ok=True)
 os.makedirs(SAVE_DIR_PATH_VIDEOS, exist_ok=True)
-os.makedirs(SAVE_DIR_PATH_CHANNEL_VIDEOS, exist_ok=True)
 
 
 class NotExistSearchListDataError(Exception):
