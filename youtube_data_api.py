@@ -158,13 +158,13 @@ def download_channel_search_list():
     # get channel_list's video data and store.
     with open('channel.json', 'r') as f:
         channel_items = json.load(f)
-    for talent_name, channel_id in channel_items.items():
-        search_list = get_channel_search_list_from_channel_id(channel_id)
+    for talent_code, channel_data in channel_items.items():
+        search_list = get_channel_search_list_from_channel_id(channel_data['id'])
 
         if search_list == SEARCH_LIST_DOWNLOAD_IS_COMPLETED:
             continue
 
-        store_channel_search_list(channel_id, search_list)
+        store_channel_search_list(channel_data['id'], search_list)
 
 
 def download_video_items_from_channel_id(channel_id):
