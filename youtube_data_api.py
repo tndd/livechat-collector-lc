@@ -74,12 +74,6 @@ def load_channels_data():
     return channels_data
 
 
-def load_channel_ids():
-    channels_data = load_channels_data()
-    channel_ids = extract_channel_ids_from_channels_data(channels_data)
-    return channel_ids
-
-
 def get_youtube_api_client():
     api_service_name = "youtube"
     api_version = "v3"
@@ -176,39 +170,6 @@ def download_video_items_from_channel_id(channel_id):
         video_item = get_video_item_from_video_id(video_id)
         store_video_item(video_id, video_item)
     print(f"[Downloaded]: VIDEO_ITEMS of \"{channel_id}\"")
-
-
-def extract_channel_ids_from_channels_data(channels_data):
-    channel_ids = []
-    for channel_code, data in channels_data.items():
-        channel_ids.append(data['id'])
-    return channel_ids
-
-
-def extract_channel_ids_from_description(description):
-    channel_ids = load_channel_ids()
-    extracted_channel_ids = []
-    for c_id in channel_ids:
-        if c_id in description:
-            extracted_channel_ids.append(c_id)
-    return extracted_channel_ids
-
-
-def make_channel_videos_from_channel_id(channel_id):
-    search_list = load_youtube_data_api_search_list(channel_id)
-    channel_videos = []
-    for search_item in search_list:
-        video_id = search_item['id']['videoId']
-        videos_data = load_youtube_data_api_videos_data(video_id)
-        channel_videos_part = {
-            'video_id': video_id,
-            'published_at': search_item['snippet']['publishedAt'],
-            'title': search_item['snippet']['title'],
-            'duration': videos_data['items'][0]['contentDetails']['duration'],
-            'statistics': videos_data['items'][0]['statistics'],
-            'live_streaming_detail': videos_data['items'][0]['liveStreamingDetails'],
-            'collabolation_ids': [],
-        }
 
 
 def main():
