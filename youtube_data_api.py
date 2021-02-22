@@ -38,6 +38,11 @@ def is_exist_youtube_data_api_video(video_id):
     return os.path.exists(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json")
 
 
+def clear_video_item(video_id):
+    if is_exist_youtube_data_api_video(video_id):
+        os.remove(f"{SAVE_DIR_PATH_VIDEOS}/{video_id}.json")
+
+
 def load_youtube_data_api_search_list(channel_id):
     try:
         with open(f"{SAVE_DIR_PATH_SEARCH}/{channel_id}.json", 'r') as f:
@@ -167,9 +172,13 @@ def download_video_items_from_channel_id(channel_id):
         if is_exist_youtube_data_api_video(video_id):
             print(f"[SKIP]: VIDEO_ITEM \"{video_id}\" have already been downloaded.")
             continue
-        video_item = get_video_item_from_video_id(video_id)
-        store_video_item(video_id, video_item)
-    print(f"[Downloaded]: VIDEO_ITEMS of \"{channel_id}\"")
+        try:
+            video_item = get_video_item_from_video_id(video_id)
+            store_video_item(video_id, video_item)
+        except Exception as e:
+            clear_video_item(video_id)
+            print(f"[ERROR]: Download VIDEO_ITEM \"{video_id}\" is missed.")
+    print(f"[Completed]: VIDEO_ITEMS of \"{channel_id}\"")
 
 
 def main():
