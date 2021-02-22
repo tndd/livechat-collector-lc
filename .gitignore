@@ -1,3 +1,4 @@
 .env
 .sandbox/
 data/
+__pycache__/
