@@ -182,9 +182,9 @@ def download_video_items_from_channel_id(channel_id):
 
 
 def main():
-    # download_channel_search_list()
-    channel_id = 'UCvaTdHTWBGv3MKj3KVqJVCw'
-    download_video_items_from_channel_id(channel_id)
+    download_channel_search_list()
+    # channel_id = 'UCvaTdHTWBGv3MKj3KVqJVCw'
+    # download_video_items_from_channel_id(channel_id)
 
 
 if __name__ == "__main__":
