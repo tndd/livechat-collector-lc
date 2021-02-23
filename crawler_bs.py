@@ -54,6 +54,15 @@ def download_y_initial_datas_from_channel_id(channel_id):
     print(f"[Completed]: Y_INITIAL_DATAS of \"{channel_id}\"")
 
 
+def extract_video_data_from_y_initial_data(y_initial_data):
+    # collaborated_ids
+    # time_length
+    # view_count
+    # like_count
+    # dislike_count
+    pass
+
+
 if __name__ == "__main__":
     channel_id = 'UCvaTdHTWBGv3MKj3KVqJVCw'
     download_y_initial_datas_from_channel_id(channel_id)
