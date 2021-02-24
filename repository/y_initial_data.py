@@ -4,10 +4,11 @@ import requests
 import re
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 from bs4 import BeautifulSoup
 
 from youtube_data_api import get_video_ids_from_channel_id
+from repository.channel import ChannelRepository
 
 
 @dataclass
@@ -68,4 +69,23 @@ class YInitialDataRepository:
         with open(cls.get_path_y_initial_data_file(video_id), 'r') as f:
             y_initial_data = json.load(f)
         return y_initial_data
+
+    @staticmethod
+    def extract_collaborated_ids_from_y_initial_data(y_initial_data: dict) -> List[str]:
+        contents = y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents']
+        for content in contents:
+            if 'videoSecondaryInfoRenderer' in content.keys():
+                description_data = content['videoSecondaryInfoRenderer']['description']['runs']
+                print(description_data)
+
+    @classmethod
+    def extract_video_data_from_y_initial_data(cls, y_initial_data) -> dict:
+        # collaborated_ids
+        ids = ChannelRepository.get_channel_ids()
+        print(ids)
+        # time_length
+        # view_count
+        # like_count
+        # dislike_count
+        pass
 
