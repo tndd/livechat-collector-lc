@@ -92,11 +92,11 @@ def get_youtube_api_client():
     return youtube_api_client
 
 
-def get_channel_search_list_from_channel_id_part(channnel_id, next_page_token=None):
+def get_channel_search_list_from_channel_id_part(channel_id, next_page_token=None):
     youtube_api_client = get_youtube_api_client()
     request = youtube_api_client.search().list(
         part="snippet",
-        channelId=channnel_id,
+        channelId=channel_id,
         eventType="completed",
         maxResults=50,
         order="date",
