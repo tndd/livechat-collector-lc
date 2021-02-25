@@ -103,13 +103,9 @@ class VideoRepository:
 
     @staticmethod
     def extract_view_count_from_y_initial_data(y_initial_data: dict) -> int:
-        contents = y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText']
-        for content in contents:
-            if 'videoPrimaryInfoRenderer' in content.keys():
-                rendered_view_count_text = \
-                    content['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText']
-                view_count = re.sub("\\D", "", rendered_view_count_text)
-                return int(view_count)
+        view_count_text = y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText']
+        view_count = re.sub("\\D", "", view_count_text)
+        return int(view_count)
 
     @staticmethod
     def extract_like_count_from_y_initial_data(y_initial_data: dict) -> int:
