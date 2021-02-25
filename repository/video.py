@@ -4,12 +4,17 @@ import re
 import json
 
 import googleapiclient.discovery
+import mysql.connector as mysql
 
 from dataclasses import dataclass
 from typing import Optional, Tuple, List
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
 from repository.channel import ChannelRepository
+
+
+load_dotenv('.env')
 
 
 @dataclass
@@ -154,6 +159,17 @@ class VideoRepository:
                 )
             )
         return video_models
+
+    @staticmethod
+    def get_mysql_client():
+        connection = mysql.connect(
+            host=os.environ.get('MYSQL_HOST'),
+            port=os.environ.get('MYSQL_PORT'),
+            user=os.environ.get('MYSQL_USER'),
+            password=os.environ.get('MYSQL_PASSWORD'),
+            database=os.environ.get('MYSQL_DB_NAME'),
+        )
+        return connection
 
     @classmethod
     def store_video_model_into_db(cls, video_model: VideoModel) -> None:
