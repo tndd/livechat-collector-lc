@@ -14,6 +14,7 @@ from mysql.connector.cursor_cext import CMySQLCursor
 
 from repository.channel import ChannelRepository
 from service.database.db import mysql_query
+from service.database.video_db_client import VideoDBClient
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
@@ -181,23 +182,7 @@ class VideoRepository:
         return video_models
 
     @staticmethod
-    @mysql_query
-    def store_video_models_into_db(
-            cursor: CMySQLCursor,
-            video_models: List[VideoModel]
-    ) -> None:
-        query = """
-        INSERT INTO livechat_collector.video(
-            id,
-            channel_id,
-            published_at,
-            title,
-            view_count,
-            like_count,
-            dislike_count
-        )
-        VALUES(%s, %s, %s, %s, %s, %s, %s);
-        """
+    def store_video_models(video_models: List[VideoModel]) -> None:
         records = list(map(lambda v: v.to_row_data(), video_models))
-        cursor.executemany(query, records)
+        VideoDBClient.insert_rows(records)
         return

@@ -19,12 +19,12 @@ def mysql_query(f):
         cursor = conn.cursor()
         try:
             rows = f(cursor, *args, **kwargs)
-            conn.commit()
             return rows
         except Exception as e:
             conn.rollback()
             raise e
         finally:
+            conn.commit()
             cursor.close()
             conn.close()
     return wrapper
