@@ -15,6 +15,9 @@ from mysql.connector.cursor_cext import CMySQLCursor
 from repository.channel import ChannelRepository
 from service.db import mysql_query
 
+# TODO: tmp
+from youtube_data_api import load_youtube_data_api_search_list
+from repository.y_initial_data import YInitialDataRepository
 
 load_dotenv('.env')
 
@@ -155,10 +158,14 @@ class VideoRepository:
 
     @classmethod
     def get_videos_from_channel_id(cls, channel_id: str) -> List[VideoModel]:
-        search_list = cls.get_channel_search_list_from_channel_id(channel_id)
+        # TODO: tmp
+        # search_list = cls.get_channel_search_list_from_channel_id(channel_id)
+        search_list = load_youtube_data_api_search_list(channel_id)
         video_models = []
         for search_data in search_list:
-            y_initial_data = cls.get_y_initial_data_from_video_id(search_data['id']['videoId'])
+            # TODO: tmp
+            # y_initial_data = cls.get_y_initial_data_from_video_id(search_data['id']['videoId'])
+            y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(search_data['id']['videoId'])
             video_models.append(
                 VideoModel(
                     id=search_data['id']['videoId'],
