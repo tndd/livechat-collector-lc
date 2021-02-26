@@ -2,7 +2,7 @@ import os
 import mysql.connector as mysql
 
 
-def get_mysql_client():
+def get_mysql_connection():
     connection = mysql.connect(
         host=os.environ.get('MYSQL_HOST'),
         port=os.environ.get('MYSQL_PORT'),
@@ -15,7 +15,7 @@ def get_mysql_client():
 
 def mysql_query(f):
     def wrapper(*args, **kwargs):
-        conn = get_mysql_client()
+        conn = get_mysql_connection()
         cursor = conn.cursor()
         try:
             rows = f(cursor, *args, **kwargs)
