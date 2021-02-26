@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from mysql.connector.cursor_cext import CMySQLCursor
 
 from repository.channel import ChannelRepository
-from service.db import mysql_query
+from service.database.db import mysql_query
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
