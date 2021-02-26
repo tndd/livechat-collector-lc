@@ -1,9 +1,9 @@
 import os
-import mysql.connector as mysql
+import mysql.connector as my_sql
 
 
 def get_mysql_connection():
-    connection = mysql.connect(
+    connection = my_sql.connect(
         host=os.environ.get('MYSQL_HOST'),
         port=os.environ.get('MYSQL_PORT'),
         user=os.environ.get('MYSQL_USER'),
