@@ -34,7 +34,7 @@ class VideoDBClient:
             rows_data: List[tuple]
     ) -> None:
         query = """
-        INSERT INTO livechat_collector.video_collaborated_id (
+        INSERT INTO livechat_collector.video_collaborated_channel_id (
             video_id,
             collaborated_id
         ) VALUES(%s, %s);
