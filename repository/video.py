@@ -10,10 +10,8 @@ from datetime import datetime
 from typing import Optional, Tuple, List
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from mysql.connector.cursor_cext import CMySQLCursor
 
 from repository.channel import ChannelRepository
-from service.database.db import mysql_query
 from service.database.video_db_client import VideoDBClient
 
 # TODO: tmp
@@ -32,7 +30,7 @@ class VideoModel:
     view_count: int
     like_count: int
     dislike_count: int
-    collaborated_ids: List[str]
+    collaborated_channel_ids: List[str]
 
     def to_row_data_video_table(self) -> tuple:
         return (
@@ -43,6 +41,12 @@ class VideoModel:
             self.view_count,
             self.like_count,
             self.dislike_count
+        )
+
+    def to_rows_data_video_collaborated_table(self) -> List[tuple]:
+        return list(map(
+            lambda channel_id: (self.id, channel_id),
+            self.collaborated_channel_ids)
         )
 
 
@@ -148,7 +152,7 @@ class VideoRepository:
         return int(like_count)
 
     @staticmethod
-    def extract_collaborated_ids_from_y_initial_data(y_initial_data: dict) -> List[str]:
+    def extract_collaborated_channel_ids_from_y_initial_data(y_initial_data: dict) -> List[str]:
         description_data = y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['description']['runs']
         description_text = json.dumps(description_data)
         collaborated_ids = []
@@ -176,7 +180,7 @@ class VideoRepository:
                     view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
                     like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
                     dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
-                    collaborated_ids=cls.extract_collaborated_ids_from_y_initial_data(y_initial_data)
+                    collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(y_initial_data)
                 )
             )
         return video_models
@@ -185,4 +189,7 @@ class VideoRepository:
     def store_video_models(video_models: List[VideoModel]) -> None:
         records_video_table = list(map(lambda v: v.to_row_data_video_table(), video_models))
         VideoDBClient.insert_rows_into_video_table(records_video_table)
+        for video in video_models:
+            records_video_collaborated_channel_ids = video.to_rows_data_video_collaborated_table()
+            VideoDBClient.insert_rows_into_video_collaborated_channel_ids_table(records_video_collaborated_channel_ids)
         return

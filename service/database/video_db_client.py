@@ -26,3 +26,17 @@ class VideoDBClient:
         VALUES(%s, %s, %s, %s, %s, %s, %s);
         """
         cursor.executemany(query, rows_data)
+
+    @staticmethod
+    @mysql_query
+    def insert_rows_into_video_collaborated_channel_ids_table(
+            cursor: CMySQLCursor,
+            rows_data: List[tuple]
+    ) -> None:
+        query = """
+        INSERT INTO livechat_collector.video_collaborated_id (
+            video_id,
+            collaborated_id
+        ) VALUES(%s, %s);
+        """
+        cursor.executemany(query, rows_data)
