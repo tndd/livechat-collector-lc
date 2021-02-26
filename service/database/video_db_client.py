@@ -9,10 +9,10 @@ from service.database.db import mysql_query
 class VideoDBClient:
     @staticmethod
     @mysql_query
-    def insert_rows(
+    def insert_rows_into_video_table(
             cursor: CMySQLCursor,
             rows_data: List[tuple]
-    ):
+    ) -> None:
         query = """
         INSERT INTO livechat_collector.video(
             id,

@@ -34,7 +34,7 @@ class VideoModel:
     dislike_count: int
     collaborated_ids: List[str]
 
-    def to_row_data(self) -> tuple:
+    def to_row_data_video_table(self) -> tuple:
         return (
             self.id,
             self.channel_id,
@@ -183,6 +183,6 @@ class VideoRepository:
 
     @staticmethod
     def store_video_models(video_models: List[VideoModel]) -> None:
-        records = list(map(lambda v: v.to_row_data(), video_models))
-        VideoDBClient.insert_rows(records)
+        records_video_table = list(map(lambda v: v.to_row_data_video_table(), video_models))
+        VideoDBClient.insert_rows_into_video_table(records_video_table)
         return
