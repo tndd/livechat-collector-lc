@@ -129,7 +129,9 @@ class VideoRepository:
 
     @staticmethod
     def extract_view_count_from_y_initial_data(y_initial_data: dict) -> int:
-        view_count_text = y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText']
+        view_count_text = \
+            y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0][
+                'videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText']
         view_count = re.sub("\\D", "", view_count_text)
         return int(view_count)
 
@@ -153,7 +155,9 @@ class VideoRepository:
 
     @staticmethod
     def extract_collaborated_channel_ids_from_y_initial_data(y_initial_data: dict) -> List[str]:
-        description_data = y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1]['videoSecondaryInfoRenderer']['description']['runs']
+        description_data = \
+            y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1][
+                'videoSecondaryInfoRenderer']['description']['runs']
         description_text = json.dumps(description_data)
         collaborated_ids = []
         for channel_id in ChannelRepository.get_channel_ids():

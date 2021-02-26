@@ -27,8 +27,8 @@ class ChannelRepository:
     @staticmethod
     def conversion_channel_data_to_model(channel_data: dict) -> ChannelModel:
         return ChannelModel(
-            id = channel_data['id'],
-            name = channel_data['name']
+            id=channel_data['id'],
+            name=channel_data['name']
         )
 
     @classmethod
