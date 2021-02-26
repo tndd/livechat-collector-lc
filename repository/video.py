@@ -4,14 +4,16 @@ import re
 import json
 
 import googleapiclient.discovery
-import mysql.connector as mysql
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional, Tuple, List
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from mysql.connector.cursor_cext import CMySQLCursor
 
 from repository.channel import ChannelRepository
+from service.db import mysql_query
 
 
 load_dotenv('.env')
@@ -21,12 +23,23 @@ load_dotenv('.env')
 class VideoModel:
     id: str
     channel_id: str
-    published_at: str
+    published_at: datetime
     title: str
     view_count: int
     like_count: int
     dislike_count: int
     collaborated_ids: List[str]
+
+    def to_row_data(self) -> tuple:
+        return (
+            self.id,
+            self.channel_id,
+            self.published_at.strftime('%Y-%m-%d %H:%M:%S'),
+            self.title,
+            self.view_count,
+            self.like_count,
+            self.dislike_count
+        )
 
 
 class VideoRepository:
@@ -150,7 +163,7 @@ class VideoRepository:
                 VideoModel(
                     id=search_data['id']['videoId'],
                     channel_id=search_data['snippet']['channelId'],
-                    published_at=search_data['snippet']['publishedAt'],
+                    published_at=datetime.strptime(search_data['snippet']['publishedAt'], '%Y-%m-%dT%H:%M:%SZ'),
                     title=search_data['snippet']['title'],
                     view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
                     like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
@@ -161,20 +174,23 @@ class VideoRepository:
         return video_models
 
     @staticmethod
-    def get_mysql_client():
-        connection = mysql.connect(
-            host=os.environ.get('MYSQL_HOST'),
-            port=os.environ.get('MYSQL_PORT'),
-            user=os.environ.get('MYSQL_USER'),
-            password=os.environ.get('MYSQL_PASSWORD'),
-            database=os.environ.get('MYSQL_DB_NAME'),
+    @mysql_query
+    def store_video_models_into_db(
+            cursor: CMySQLCursor,
+            video_models: List[VideoModel]
+    ) -> None:
+        query = """
+        INSERT INTO livechat_collector.video(
+            id,
+            channel_id,
+            published_at,
+            title,
+            view_count,
+            like_count,
+            dislike_count
         )
-        return connection
-
-    @classmethod
-    def store_video_model_into_db(cls, video_model: VideoModel) -> None:
-        pass  # TODO
-
-    @classmethod
-    def store_video_models_into_db(cls, video_models: List[VideoModel]) -> None:
-        pass  # TODO
+        VALUES(%s, %s, %s, %s, %s, %s, %s);
+        """
+        records = list(map(lambda v: v.to_row_data(), video_models))
+        cursor.executemany(query, records)
+        return
