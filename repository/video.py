@@ -135,8 +135,11 @@ class VideoRepository:
         video_models = []
         for search_data in search_list:
             video_id = search_data['id']['videoId']
-            y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id, channel_id)
-            # y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(search_data['id']['videoId'])
+            # y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id, channel_id)
+            # TODO remove
+            y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(search_data['id']['videoId'])
+            y_initial_data_obj = YInitialDataClient.from_y_initial_data_dict_to_obj(y_initial_data, channel_id)
+            ###
             video_models.append(
                 VideoModel(
                     id=video_id,

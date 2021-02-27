@@ -74,14 +74,18 @@ class YInitialDataClient:
         return [x for x in collaborated_ids if x != self_channel_id]
 
     @classmethod
-    def get_y_initial_data_obj_from_video_id(cls, video_id: str, channel_id: str) -> YInitialDataObj:
-        y_initial_data_dict = cls.get_y_initial_data_dict_from_video_id(video_id)
+    def from_y_initial_data_dict_to_obj(cls, y_initial_data: dict, channel_id: str) -> YInitialDataObj:
         return YInitialDataObj(
-            view_count=cls.extract_view_count_from_y_initial_data(y_initial_data_dict),
-            like_count=cls.extract_like_count_from_y_initial_data(y_initial_data_dict),
-            dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data_dict),
+            view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
+            like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
+            dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
             collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(
-                y_initial_data_dict,
+                y_initial_data,
                 channel_id
             )
         )
+
+    @classmethod
+    def get_y_initial_data_obj_from_video_id(cls, video_id: str, channel_id: str) -> YInitialDataObj:
+        y_initial_data = cls.get_y_initial_data_dict_from_video_id(video_id)
+        return cls.from_y_initial_data_dict_to_obj(y_initial_data, channel_id)
