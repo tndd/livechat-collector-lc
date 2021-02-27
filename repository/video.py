@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 from repository.channel import ChannelRepository
 from service.client.database.video_db_client import VideoDBClient
+from service.client.crawler.y_initial_data_client import YInitialDataClient
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
@@ -112,10 +113,6 @@ class VideoRepository:
         print(f"[Downloaded]: SEARCH_LIST \"{channel_id}\"")
         return search_list
 
-    @staticmethod
-    def get_url_of_video_id(video_id: str) -> str:
-        return f"https://www.youtube.com/watch?v={video_id}"
-
     @classmethod
     def get_video_model_from_id(cls, video_id: str) -> VideoModel:
         row = VideoDBClient.select_row_video_table(video_id)
@@ -131,79 +128,25 @@ class VideoRepository:
         )
 
     @classmethod
-    def get_y_initial_data_from_video_id(cls, video_id: str) -> Optional[dict]:
-        r = requests.get(cls.get_url_of_video_id(video_id))
-        soup = BeautifulSoup(r.text, 'lxml')
-        for element in soup.find_all('script'):
-            content = str(element.string)
-            if re.match(r'^(var ytInitialData = )', content):
-                y_initial_data = content[len('var ytInitialData = '):-len(';')]
-                return json.loads(y_initial_data)
-        return None
-
-    @staticmethod
-    def extract_view_count_from_y_initial_data(y_initial_data: dict) -> int:
-        view_count_text = \
-            y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0][
-                'videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['simpleText']
-        view_count = re.sub("\\D", "", view_count_text)
-        return int(view_count)
-
-    @staticmethod
-    def extract_like_count_from_y_initial_data(y_initial_data: dict) -> int:
-        like_count_text = \
-            y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0][
-                'videoPrimaryInfoRenderer']['videoActions']['menuRenderer']['topLevelButtons'][0][
-                'toggleButtonRenderer']['defaultText']['simpleText']
-        like_count = re.sub("\\D", "", like_count_text)
-        return int(like_count)
-
-    @staticmethod
-    def extract_dislike_count_from_y_initial_data(y_initial_data: dict) -> int:
-        dislike_count_text = \
-            y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][0][
-                'videoPrimaryInfoRenderer']['videoActions']['menuRenderer']['topLevelButtons'][1][
-                'toggleButtonRenderer']['defaultText']['simpleText']
-        like_count = re.sub("\\D", "", dislike_count_text)
-        return int(like_count)
-
-    @staticmethod
-    def extract_collaborated_channel_ids_from_y_initial_data(
-            y_initial_data: dict,
-            self_channel_id: str) -> List[str]:
-        description_data = \
-            y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1][
-                'videoSecondaryInfoRenderer']['description']['runs']
-        description_text = json.dumps(description_data)
-        collaborated_ids = []
-        for channel_id in ChannelRepository.get_channel_ids():
-            if channel_id in description_text:
-                collaborated_ids.append(channel_id)
-        return [x for x in collaborated_ids if x != self_channel_id]
-
-    @classmethod
     def get_video_models_from_channel_id(cls, channel_id: str) -> List[VideoModel]:
         # TODO: tmp
         # search_list = cls.get_channel_search_list_from_channel_id(channel_id)
         search_list = load_youtube_data_api_search_list(channel_id)
         video_models = []
         for search_data in search_list:
-            # TODO: tmp
-            # y_initial_data = cls.get_y_initial_data_from_video_id(search_data['id']['videoId'])
-            y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(search_data['id']['videoId'])
+            video_id = search_data['id']['videoId']
+            y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id, channel_id)
+            # y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(search_data['id']['videoId'])
             video_models.append(
                 VideoModel(
-                    id=search_data['id']['videoId'],
-                    channel_id=search_data['snippet']['channelId'],
+                    id=video_id,
+                    channel_id=channel_id,
                     published_at=datetime.strptime(search_data['snippet']['publishedAt'], '%Y-%m-%dT%H:%M:%SZ'),
                     title=search_data['snippet']['title'],
-                    view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
-                    like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
-                    dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
-                    collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(
-                        y_initial_data,
-                        search_data['snippet']['channelId']
-                    )
+                    view_count=y_initial_data_obj.view_count,
+                    like_count=y_initial_data_obj.like_count,
+                    dislike_count=y_initial_data_obj.dislike_count,
+                    collaborated_channel_ids=y_initial_data_obj.collaborated_channel_ids
                 )
             )
         return video_models
