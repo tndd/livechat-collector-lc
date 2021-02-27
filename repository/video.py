@@ -135,10 +135,10 @@ class VideoRepository:
         video_models = []
         for search_data in search_list:
             video_id = search_data['id']['videoId']
-            # y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id, channel_id)
+            # y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id)
             # TODO remove
-            y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(search_data['id']['videoId'])
-            y_initial_data_obj = YInitialDataClient.from_y_initial_data_dict_to_obj(y_initial_data, channel_id)
+            y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(video_id)
+            y_initial_data_obj = YInitialDataClient.from_y_initial_data_dict_to_obj(y_initial_data)
             ###
             video_models.append(
                 VideoModel(
@@ -149,7 +149,7 @@ class VideoRepository:
                     view_count=y_initial_data_obj.view_count,
                     like_count=y_initial_data_obj.like_count,
                     dislike_count=y_initial_data_obj.dislike_count,
-                    collaborated_channel_ids=y_initial_data_obj.collaborated_channel_ids
+                    collaborated_channel_ids=[x for x in y_initial_data_obj.collaborated_channel_ids if x != channel_id]
                 )
             )
         return video_models

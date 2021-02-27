@@ -60,9 +60,7 @@ class YInitialDataClient:
         return int(like_count)
 
     @staticmethod
-    def extract_collaborated_channel_ids_from_y_initial_data(
-            y_initial_data: dict,
-            self_channel_id: str) -> List[str]:
+    def extract_collaborated_channel_ids_from_y_initial_data(y_initial_data: dict) -> List[str]:
         description_data = \
             y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1][
                 'videoSecondaryInfoRenderer']['description']['runs']
@@ -71,21 +69,18 @@ class YInitialDataClient:
         for channel_id in ChannelRepository.get_channel_ids():
             if channel_id in description_text:
                 collaborated_ids.append(channel_id)
-        return [x for x in collaborated_ids if x != self_channel_id]
+        return collaborated_ids
 
     @classmethod
-    def from_y_initial_data_dict_to_obj(cls, y_initial_data: dict, channel_id: str) -> YInitialDataObj:
+    def from_y_initial_data_dict_to_obj(cls, y_initial_data: dict) -> YInitialDataObj:
         return YInitialDataObj(
             view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
             like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
             dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
-            collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(
-                y_initial_data,
-                channel_id
-            )
+            collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(y_initial_data)
         )
 
     @classmethod
-    def get_y_initial_data_obj_from_video_id(cls, video_id: str, channel_id: str) -> YInitialDataObj:
+    def get_y_initial_data_obj_from_video_id(cls, video_id: str) -> YInitialDataObj:
         y_initial_data = cls.get_y_initial_data_dict_from_video_id(video_id)
-        return cls.from_y_initial_data_dict_to_obj(y_initial_data, channel_id)
+        return cls.from_y_initial_data_dict_to_obj(y_initial_data)
