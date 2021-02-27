@@ -18,13 +18,13 @@ def mysql_query(f):
         conn = get_mysql_connection()
         cursor = conn.cursor()
         try:
-            rows = f(cursor, *args, **kwargs)
-            return rows
+            result = f(cursor, *args, **kwargs)
+            conn.commit()
+            return result
         except Exception as e:
             conn.rollback()
             raise e
         finally:
-            conn.commit()
             cursor.close()
             conn.close()
     return wrapper
