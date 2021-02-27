@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 from repository.channel import ChannelRepository
-from service.database.video_db_client import VideoDBClient
+from service.client.database.video_db_client import VideoDBClient
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
