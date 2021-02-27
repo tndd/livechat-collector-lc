@@ -166,7 +166,7 @@ class VideoRepository:
         return collaborated_ids
 
     @classmethod
-    def get_videos_from_channel_id(cls, channel_id: str) -> List[VideoModel]:
+    def get_video_models_from_channel_id(cls, channel_id: str) -> List[VideoModel]:
         # TODO: tmp
         # search_list = cls.get_channel_search_list_from_channel_id(channel_id)
         search_list = load_youtube_data_api_search_list(channel_id)
