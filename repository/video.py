@@ -117,6 +117,20 @@ class VideoRepository:
         return f"https://www.youtube.com/watch?v={video_id}"
 
     @classmethod
+    def get_video_model_from_id(cls, video_id: str) -> Optional[VideoModel]:
+        row = VideoDBClient.select_row_video_table(video_id)
+        return VideoModel(
+            id=row[0],
+            channel_id=row[1],
+            published_at=row[2],
+            title=row[3],
+            view_count=row[4],
+            like_count=row[5],
+            dislike_count=row[6],
+            collaborated_channel_ids=[]  # TODO
+        )
+
+    @classmethod
     def get_y_initial_data_from_video_id(cls, video_id: str) -> Optional[dict]:
         r = requests.get(cls.get_url_of_video_id(video_id))
         soup = BeautifulSoup(r.text, 'lxml')

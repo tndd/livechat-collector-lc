@@ -40,3 +40,16 @@ class VideoDBClient:
         ) VALUES(%s, %s);
         """
         cursor.executemany(query, rows_data)
+
+    @staticmethod
+    @mysql_query
+    def select_row_video_table(
+            cursor: CMySQLCursor,
+            video_id: str) -> tuple:
+        query = """
+        SELECT id, channel_id, published_at, title, view_count, like_count, dislike_count
+        FROM livechat_collector.video
+        WHERE id = %s;
+        """
+        cursor.execute(query, (video_id,))
+        return cursor.fetchone()
