@@ -1,17 +1,12 @@
 import os
-import requests
-import re
-import json
 
 import googleapiclient.discovery
 
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Tuple, List
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
-from repository.channel import ChannelRepository
 from service.client.database.video_db_client import VideoDBClient
 from service.client.crawler.y_initial_data_client import YInitialDataClient
 
@@ -133,12 +128,13 @@ class VideoRepository:
         # search_list = cls.get_channel_search_list_from_channel_id(channel_id)
         search_list = load_youtube_data_api_search_list(channel_id)
         video_models = []
-        for search_data in search_list:
+        for idx, search_data in enumerate(search_list):
             video_id = search_data['id']['videoId']
-            # y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id)
+            print(f"[{idx + 1}/{len(search_list)}]: {video_id}")
+            y_initial_data_obj = YInitialDataClient.get_y_initial_data_obj_from_video_id(video_id)
             # TODO remove
-            y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(video_id)
-            y_initial_data_obj = YInitialDataClient.from_y_initial_data_dict_to_obj(y_initial_data)
+            # y_initial_data = YInitialDataRepository.load_y_initial_data_from_video_id(video_id)
+            # y_initial_data_obj = YInitialDataClient.from_y_initial_data_dict_to_obj(y_initial_data)
             ###
             video_models.append(
                 VideoModel(
