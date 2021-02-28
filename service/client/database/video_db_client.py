@@ -36,7 +36,7 @@ class VideoDBClient:
         query = """
         INSERT IGNORE INTO livechat_collector.video_collaborated_channel_id (
             video_id,
-            collaborated_id
+            collaborated_channel_id
         ) VALUES(%s, %s);
         """
         cursor.executemany(query, rows_data)
