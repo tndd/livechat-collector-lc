@@ -1,17 +1,19 @@
 import json
 
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import List
 
-
-ChannelCode = str
-ChannelId = str
+from service.client.database.channel_db_client import ChannelDBClient
 
 
 @dataclass
 class ChannelModel:
-    id: ChannelId
+    id: str
+    code: str
     name: str
+
+    def to_channel_table_row(self) -> tuple:
+        return self.id, self.code, self.name
 
 
 @dataclass
@@ -25,24 +27,38 @@ class ChannelRepository:
         return channels_data
 
     @staticmethod
-    def conversion_channel_data_to_model(channel_data: dict) -> ChannelModel:
+    def conversion_channel_data_to_model(
+            channel_code: str,
+            channel_data: dict
+    ) -> ChannelModel:
         return ChannelModel(
             id=channel_data['id'],
+            code=channel_code,
             name=channel_data['name']
         )
 
     @classmethod
-    def get_code_channel_models(cls) -> Dict[ChannelCode, ChannelModel]:
+    def load_channel_models_from_json(cls) -> List[ChannelModel]:
         channels_data = cls.load_channels_data()
-        code_channel_models = {}
+        channel_models = []
         for code, data in channels_data.items():
-            code_channel_models[code] = cls.conversion_channel_data_to_model(data)
-        return code_channel_models
+            channel_models.append(cls.conversion_channel_data_to_model(code, data))
+        return channel_models
 
     @classmethod
-    def get_channel_ids(cls) -> List[ChannelId]:
-        code_channel_models = cls.get_code_channel_models()
+    def get_channel_ids(cls) -> List[str]:
+        channel_models = cls.load_channel_models_from_json()
         channel_ids = []
-        for channel_model in code_channel_models.values():
+        for channel_model in channel_models:
             channel_ids.append(channel_model.id)
         return channel_ids
+
+    @staticmethod
+    def store_channel_models_into_db(channels: List[ChannelModel]) -> None:
+        rows_data = list(map(lambda cm: cm.to_channel_table_row(), channels))
+        ChannelDBClient.insert_rows(rows_data)
+
+    @classmethod
+    def load_rows_into_db_from_json(cls) -> None:
+        channel_models = cls.load_channel_models_from_json()
+        cls.store_channel_models_into_db(channel_models)
