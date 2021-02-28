@@ -43,7 +43,7 @@ class VideoDBClient:
 
     @staticmethod
     @mysql_query
-    def select_row_video_table(
+    def select_row_from_video_table(
             cursor: CMySQLCursor,
             video_id: str) -> tuple:
         query = """

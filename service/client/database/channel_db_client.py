@@ -7,7 +7,7 @@ from service.client.database.db import mysql_query
 class ChannelDBClient:
     @staticmethod
     @mysql_query
-    def insert_rows(
+    def insert_rows_into_channel_table(
         cursor: CMySQLCursor,
         rows_data: List[tuple]
     ) -> None:

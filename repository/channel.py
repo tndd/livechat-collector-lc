@@ -56,7 +56,7 @@ class ChannelRepository:
     @staticmethod
     def store_channel_models_into_db(channels: List[ChannelModel]) -> None:
         rows_data = list(map(lambda cm: cm.to_channel_table_row(), channels))
-        ChannelDBClient.insert_rows(rows_data)
+        ChannelDBClient.insert_rows_into_channel_table(rows_data)
 
     @classmethod
     def load_rows_into_db_from_json(cls) -> None:

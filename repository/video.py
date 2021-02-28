@@ -115,7 +115,7 @@ class VideoRepository:
 
     @classmethod
     def get_video_model_from_id(cls, video_id: str) -> VideoModel:
-        row = VideoDBClient.select_row_video_table(video_id)
+        row = VideoDBClient.select_row_from_video_table(video_id)
         return VideoModel(
             id=row[0],
             channel_id=row[1],
