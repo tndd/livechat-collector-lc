@@ -10,9 +10,9 @@ from model.table.video_data import VideoData
 class VideoDBClient:
     @staticmethod
     @mysql_query
-    def insert_videos_data_into_video_table(
+    def insert_rows_into_video_table(
             cursor: CMySQLCursor,
-            videos_data: List[VideoData]) -> None:
+            rows_data: List[tuple]) -> None:
         query = """
         INSERT IGNORE INTO livechat_collector.video(
             id,
@@ -22,12 +22,11 @@ class VideoDBClient:
         )
         VALUES(%s, %s, %s, %s);
         """
-        rows_data = list(map(lambda vd: vd.to_row_video_table(), videos_data))
         cursor.executemany(query, rows_data)
 
     @staticmethod
     @mysql_query
-    def select_video_data_from_video_table(
+    def select_row_from_video_table(
             cursor: CMySQLCursor,
             video_id: str) -> VideoData:
         query = """
@@ -36,13 +35,7 @@ class VideoDBClient:
         WHERE id = %s;
         """
         cursor.execute(query, (video_id,))
-        row = cursor.fetchone()
-        return VideoData(
-            id=row[0],
-            channel_id=row[1],
-            published_at=row[2],
-            title=row[3],
-        )
+        return cursor.fetchone()
 
     @staticmethod
     @mysql_query

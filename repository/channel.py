@@ -4,16 +4,7 @@ from dataclasses import dataclass
 from typing import List
 
 from service.client.channel_db_client import ChannelDBClient
-
-
-@dataclass
-class ChannelModel:
-    id: str
-    code: str
-    name: str
-
-    def to_channel_table_row(self) -> tuple:
-        return self.id, self.code, self.name
+from model.channel import ChannelModel
 
 
 @dataclass

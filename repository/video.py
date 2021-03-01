@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from service.client.video_db_client import VideoDBClient
 from service.client.y_initial_data_client import YInitialDataClient
 from service.client.youtube_data_api_client import YoutubeDataAPIClient
+from model.table.video_data import VideoData
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
@@ -43,6 +44,22 @@ class VideoModel:
 
 
 class VideoRepository:
+    @staticmethod
+    def store_videos_data_of_channel_id(channel_id: str) -> None:
+        videos_data = YoutubeDataAPIClient.read_videos_data_of_file_from_channel_id(channel_id)
+        rows_data = list(map(lambda vd: vd.to_row_video_table(), videos_data))
+        VideoDBClient.insert_rows_into_video_table(rows_data)
+
+    @staticmethod
+    def get_video_data_from_video_id(video_id: str) -> VideoData:
+        row = VideoDBClient.select_row_from_video_table(video_id)
+        return VideoData(
+            id=row[0],
+            channel_id=row[1],
+            published_at=row[2],
+            title=row[3],
+        )
+
     @classmethod
     def get_video_model_from_id(cls, video_id: str) -> VideoModel:
         row = VideoDBClient.select_row_from_video_table(video_id)
