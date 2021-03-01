@@ -16,3 +16,14 @@ class ChannelDBClient:
         VALUES(%s, %s, %s);
         '''
         cursor.executemany(query, rows_data)
+
+    @staticmethod
+    @mysql_query
+    def select_rows_from_channel_table(
+            cursor: CMySQLCursor
+    ) -> List[tuple]:
+        query = '''
+        SELECT id, code, name FROM livechat_collector.channel;
+        '''
+        cursor.execute(query)
+        return cursor.fetchall()

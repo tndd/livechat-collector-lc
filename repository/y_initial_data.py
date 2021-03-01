@@ -81,11 +81,10 @@ class YInitialDataRepository:
     @classmethod
     def extract_video_data_from_y_initial_data(cls, y_initial_data) -> dict:
         # collaborated_ids
-        ids = ChannelRepository.get_channel_ids()
+        ids = ChannelRepository.get_all_channel_ids()
         print(ids)
         # time_length
         # view_count
         # like_count
         # dislike_count
         pass
-

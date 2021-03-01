@@ -59,7 +59,7 @@ class VideoRepository:
 
     @classmethod
     def store_all_videos_data(cls) -> None:
-        channel_ids = ChannelRepository.get_channel_ids()
+        channel_ids = ChannelRepository.get_all_channel_ids()
         for cid in channel_ids:
             cls.store_videos_data_of_channel_id(cid)
             print(cid)
