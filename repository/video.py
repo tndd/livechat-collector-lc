@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from service.client.video_db_client import VideoDBClient
 from service.client.y_initial_data_client import YInitialDataClient
 from service.client.youtube_data_api_client import YoutubeDataAPIClient
+from repository.channel import ChannelRepository
 from model.table.video_data import VideoData
 
 # TODO: tmp
@@ -55,6 +56,13 @@ class VideoRepository:
             videos_data = YoutubeDataAPIClient.get_videos_data_from_channel_id(channel_id)
         rows_data = list(map(lambda vd: vd.to_row_video_table(), videos_data))
         VideoDBClient.insert_rows_into_video_table(rows_data)
+
+    @classmethod
+    def store_all_videos_data(cls) -> None:
+        channel_ids = ChannelRepository.get_channel_ids()
+        for cid in channel_ids:
+            cls.store_videos_data_of_channel_id(cid)
+            print(cid)
 
     @staticmethod
     def get_video_data_from_video_id(video_id: str) -> VideoData:
