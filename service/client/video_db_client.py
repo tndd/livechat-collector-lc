@@ -3,7 +3,7 @@ from typing import List
 from mysql.connector.cursor_cext import CMySQLCursor
 
 from service.db import mysql_query
-from model.table.video_data import VideoData
+from service.client.table.video_data import VideoData
 
 
 @dataclass

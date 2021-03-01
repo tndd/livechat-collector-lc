@@ -6,7 +6,7 @@ import googleapiclient.discovery
 from typing import Optional, Tuple, List
 from datetime import datetime
 
-from model.table.video_data import VideoData
+from service.client.table.video_data import VideoData
 
 
 class YoutubeDataAPIClient:

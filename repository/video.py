@@ -9,7 +9,7 @@ from service.client.video_db_client import VideoDBClient
 from service.client.y_initial_data_client import YInitialDataClient
 from service.client.youtube_data_api_client import YoutubeDataAPIClient
 from repository.channel import ChannelRepository
-from model.table.video_data import VideoData
+from service.client.table.video_data import VideoData
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list

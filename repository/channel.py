@@ -3,7 +3,7 @@ import json
 from typing import List
 
 from service.client.channel_db_client import ChannelDBClient
-from model.channel import Channel
+from service.client.table.channel_data import ChannelData
 
 
 class ChannelRepository:
@@ -14,7 +14,7 @@ class ChannelRepository:
         return channels_data
 
     @staticmethod
-    def store_channel_models(channels: List[Channel]) -> None:
+    def store_channel_models(channels: List[ChannelData]) -> None:
         rows_data = list(map(lambda cm: cm.to_channel_table_row(), channels))
         ChannelDBClient.insert_rows_into_channel_table(rows_data)
 
@@ -24,7 +24,7 @@ class ChannelRepository:
         channel_models = []
         for code, data in channels_data.items():
             channel_models.append(
-                Channel(
+                ChannelData(
                     id=data['id'],
                     code=code,
                     name=data['name']
@@ -33,9 +33,9 @@ class ChannelRepository:
         cls.store_channel_models(channel_models)
 
     @classmethod
-    def get_channel_models(cls) -> List[Channel]:
+    def get_channel_models(cls) -> List[ChannelData]:
         rows_data = ChannelDBClient.select_rows_from_channel_table()
-        channel_models = list(map(lambda r: Channel(
+        channel_models = list(map(lambda r: ChannelData(
             id=r[0],
             code=r[1],
             name=r[2]
