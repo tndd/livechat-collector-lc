@@ -3,18 +3,9 @@ import re
 import json
 
 from typing import Optional, List
-from dataclasses import dataclass
 from bs4 import BeautifulSoup
 
 from repository.channel import ChannelRepository
-
-
-@dataclass
-class YInitialDataObj:
-    view_count: int
-    like_count: int
-    dislike_count: int
-    collaborated_channel_ids: List[str]
 
 
 class YInitialDataClient:
@@ -72,8 +63,8 @@ class YInitialDataClient:
         return collaborated_ids
 
     @classmethod
-    def from_y_initial_data_dict_to_obj(cls, y_initial_data: dict) -> YInitialDataObj:
-        return YInitialDataObj(
+    def from_y_initial_data_dict_to_obj(cls, y_initial_data: dict) -> VideoStatistics:
+        return VideoStatistics(
             view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
             like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
             dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
@@ -81,6 +72,6 @@ class YInitialDataClient:
         )
 
     @classmethod
-    def get_y_initial_data_obj_from_video_id(cls, video_id: str) -> YInitialDataObj:
+    def get_y_initial_data_obj_from_video_id(cls, video_id: str) -> VideoStatistics:
         y_initial_data = cls.get_y_initial_data_dict_from_video_id(video_id)
         return cls.from_y_initial_data_dict_to_obj(y_initial_data)
