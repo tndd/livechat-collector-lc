@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from typing import List
 
-from service.client.database.channel_db_client import ChannelDBClient
+from service.client.channel_db_client import ChannelDBClient
 
 
 @dataclass

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 from mysql.connector.cursor_cext import CMySQLCursor
 
-from service.client.database.db import mysql_query
+from service.db import mysql_query
 
 
 @dataclass

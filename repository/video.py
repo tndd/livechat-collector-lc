@@ -7,12 +7,11 @@ from datetime import datetime
 from typing import Optional, Tuple, List
 from dotenv import load_dotenv
 
-from service.client.database.video_db_client import VideoDBClient
-from service.client.crawler.y_initial_data_client import YInitialDataClient
+from service.client.video_db_client import VideoDBClient
+from service.client.y_initial_data_client import YInitialDataClient
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
-from repository.y_initial_data import YInitialDataRepository
 
 load_dotenv('.env')
 
