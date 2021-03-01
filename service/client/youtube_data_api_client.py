@@ -74,9 +74,9 @@ class YoutubeDataAPIClient:
         return videos_data
 
     @classmethod
-    def read_videos_data_of_file_from_channel_id(cls, channel_id: str) -> List[VideoData]:
+    def read_videos_data_from_file(cls, file_path: str) -> List[VideoData]:
         # this is a temporary method. so it will be removed.
-        with open(f"data/youtube_data_api/search/{channel_id}.json", 'r') as f:
+        with open(file_path, 'r') as f:
             search_list = json.load(f)
         videos_data = cls.convert_search_list_to_video_data(search_list)
         return videos_data

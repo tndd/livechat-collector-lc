@@ -1,3 +1,5 @@
+import os
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List
@@ -46,7 +48,11 @@ class VideoModel:
 class VideoRepository:
     @staticmethod
     def store_videos_data_of_channel_id(channel_id: str) -> None:
-        videos_data = YoutubeDataAPIClient.read_videos_data_of_file_from_channel_id(channel_id)
+        file_path = f"data/youtube_data_api/search/{channel_id}.json"
+        if os.path.exists(file_path):
+            videos_data = YoutubeDataAPIClient.read_videos_data_from_file(file_path)
+        else:
+            videos_data = YoutubeDataAPIClient.get_videos_data_from_channel_id(channel_id)
         rows_data = list(map(lambda vd: vd.to_row_video_table(), videos_data))
         VideoDBClient.insert_rows_into_video_table(rows_data)
 
