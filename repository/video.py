@@ -1,14 +1,11 @@
-import os
-
-import googleapiclient.discovery
-
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Tuple, List
+from typing import List
 from dotenv import load_dotenv
 
 from service.client.video_db_client import VideoDBClient
 from service.client.y_initial_data_client import YInitialDataClient
+from service.client.youtube_data_api_client import YoutubeDataAPIClient
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
@@ -46,67 +43,6 @@ class VideoModel:
 
 
 class VideoRepository:
-    dir_path_video: str = './data/video'
-
-    @classmethod
-    def get_file_path_video(cls, channel_id: str) -> str:
-        return f"{cls.dir_path_video}/{channel_id}.json"
-
-    @classmethod
-    def is_exist_file_video_id(cls, channel_id: str) -> bool:
-        return os.path.exists(cls.get_file_path_video(channel_id))
-
-    @classmethod
-    def clear_video(cls, channel_id: str) -> None:
-        if cls.is_exist_file_video_id(channel_id):
-            os.remove(cls.get_file_path_video(channel_id))
-
-    @staticmethod
-    def get_youtube_api_client():
-        api_service_name = "youtube"
-        api_version = "v3"
-        api_key = os.environ.get("YOUTUBE_DATA_API_KEY")
-
-        youtube_api_client = googleapiclient.discovery.build(
-            api_service_name,
-            api_version,
-            developerKey=api_key
-        )
-        return youtube_api_client
-
-    @classmethod
-    def get_channel_search_list_from_channel_id_part(
-            cls,
-            channel_id: str,
-            next_page_token: Optional[str] = None
-    ) -> Tuple[str, dict]:
-        youtube_api_client = cls.get_youtube_api_client()
-        request = youtube_api_client.search().list(
-            part="snippet",
-            channelId=channel_id,
-            eventType="completed",
-            maxResults=50,
-            order="date",
-            type="video",
-            pageToken=next_page_token
-        )
-        response = request.execute()
-
-        return response.get('nextPageToken', 'EMPTY'), response['items']
-
-    @classmethod
-    def get_channel_search_list_from_channel_id(cls, channel_id: str) -> List[dict]:
-        next_page_token = None
-        search_list = []
-        while next_page_token != 'EMPTY':
-            next_page_token, search_list_part = cls.get_channel_search_list_from_channel_id_part(
-                channel_id,
-                next_page_token
-            )
-            search_list.extend(search_list_part)
-        print(f"[Downloaded]: SEARCH_LIST \"{channel_id}\"")
-        return search_list
-
     @classmethod
     def get_video_model_from_id(cls, video_id: str) -> VideoModel:
         row = VideoDBClient.select_row_from_video_table(video_id)
