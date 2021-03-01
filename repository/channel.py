@@ -8,43 +8,33 @@ from service.client.table.channel_data import ChannelData
 
 class ChannelRepository:
     @classmethod
-    def read_channels_data_from_file(cls, path) -> dict:
+    def read_channels_obj_from_file(cls, path) -> dict:
         with open(path, 'r') as f:
-            channels_data = json.load(f)
-        return channels_data
-
-    @staticmethod
-    def store_channel_models(channels: List[ChannelData]) -> None:
-        rows_data = list(map(lambda cm: cm.to_channel_table_row(), channels))
-        ChannelDBClient.insert_rows_into_channel_table(rows_data)
+            channels_obj = json.load(f)
+        return channels_obj
 
     @classmethod
     def load_channel_models_into_db_from_file(cls) -> None:
-        channels_data = cls.read_channels_data_from_file('./channel.json')
-        channel_models = []
-        for code, data in channels_data.items():
-            channel_models.append(
+        channels_obj = cls.read_channels_obj_from_file('./channel.json')
+        channels_data = []
+        for code, data in channels_obj.items():
+            channels_data.append(
                 ChannelData(
                     id=data['id'],
                     code=code,
                     name=data['name']
                 )
             )
-        cls.store_channel_models(channel_models)
+        ChannelDBClient.insert_channels_data_into_channel_table(channels_data)
 
     @classmethod
-    def get_channel_models(cls) -> List[ChannelData]:
-        rows_data = ChannelDBClient.select_rows_from_channel_table()
-        channel_models = list(map(lambda r: ChannelData(
-            id=r[0],
-            code=r[1],
-            name=r[2]
-        ), rows_data))
-        return channel_models
+    def get_channels_data(cls) -> List[ChannelData]:
+        channels_data = ChannelDBClient.select_channels_data()
+        return channels_data
 
     @classmethod
     def get_channel_ids(cls) -> List[str]:
-        channel_models = cls.get_channel_models()
+        channel_models = cls.get_channels_data()
         channel_ids = []
         for channel_model in channel_models:
             channel_ids.append(channel_model.id)
