@@ -66,7 +66,7 @@ class YInitialDataClient:
                 'videoSecondaryInfoRenderer']['description']['runs']
         description_text = json.dumps(description_data)
         collaborated_ids = []
-        for channel_id in ChannelRepository.get_all_channel_ids():
+        for channel_id in ChannelRepository.get_channel_ids():
             if channel_id in description_text:
                 collaborated_ids.append(channel_id)
         return collaborated_ids
