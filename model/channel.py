@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ChannelModel:
+class Channel:
     id: str
     code: str
     name: str
