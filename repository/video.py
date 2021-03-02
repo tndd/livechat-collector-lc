@@ -54,7 +54,7 @@ class VideoRepository:
             video_rows = YoutubeDataAPIClient.read_video_rows_from_file(file_path)
         else:
             video_rows = YoutubeDataAPIClient.get_video_rows_from_channel_id(channel_id)
-        query_params = list(map(lambda vr: vr.to_query_param(), video_rows))
+        query_params = list(map(lambda vr: vr.to_param(), video_rows))
         VideoDBClient.insert_rows_into_video_table(query_params)
 
     @classmethod
