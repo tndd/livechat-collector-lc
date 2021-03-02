@@ -23,6 +23,22 @@ class VideoData:
 
 
 @dataclass
+class VideoStatisticsData:
+    video_id: str
+    view_count: int
+    like_count: int
+    dislike_count: int
+
+    def to_param(self) -> tuple:
+        return (
+            self.video_id,
+            self.view_count,
+            self.like_count,
+            self.dislike_count
+        )
+
+
+@dataclass
 class VideoDBClient:
     @staticmethod
     @mysql_query
@@ -40,6 +56,22 @@ class VideoDBClient:
         """
         rows_data = list(map(lambda vd: vd.to_param(), videos_data))
         cursor.executemany(query, rows_data)
+
+    @staticmethod
+    @mysql_query
+    def insert_video_statistics(
+            cursor: CMySQLCursor,
+            video_statistics: VideoStatisticsData
+    ) -> None:
+        query = """
+        INSERT INTO livechat_collector.video_statistics (
+            video_id,
+            view_count,
+            like_count,
+            dislike_count
+        ) VALUES(%s, %s, %s, %s);
+        """
+        cursor.execute(query, video_statistics.to_param())
 
     @staticmethod
     @mysql_query
