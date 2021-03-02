@@ -4,8 +4,36 @@ import json
 
 from typing import Optional, List
 from bs4 import BeautifulSoup
+from dataclasses import dataclass
 
 from repository.channel import ChannelRepository
+
+
+@dataclass
+class YInitialDataResult:
+    video_id: str
+    view_count: int
+    like_count: int
+    dislike_count: int
+    collaborated_channel_ids: List[str]
+
+    def to_param_statistics(self) -> tuple:
+        return (
+            self.video_id,
+            self.view_count,
+            self.like_count,
+            self.dislike_count
+        )
+
+    def to_param_collaborated_ids(self) -> List[tuple]:
+        return list(map(lambda cid: (
+            self.video_id,
+            cid
+        ), self.collaborated_channel_ids))
+
+
+class NotFoundYInitialDataError(Exception):
+    pass
 
 
 class YInitialDataClient:
@@ -14,7 +42,7 @@ class YInitialDataClient:
         return f"https://www.youtube.com/watch?v={video_id}"
 
     @classmethod
-    def get_y_initial_data_dict_from_video_id(cls, video_id: str) -> Optional[dict]:
+    def get_y_initial_data_from_video_id(cls, video_id: str) -> dict:
         r = requests.get(cls.get_url_of_video_id(video_id))
         soup = BeautifulSoup(r.text, 'lxml')
         for element in soup.find_all('script'):
@@ -22,7 +50,7 @@ class YInitialDataClient:
             if re.match(r'^(var ytInitialData = )', content):
                 y_initial_data = content[len('var ytInitialData = '):-len(';')]
                 return json.loads(y_initial_data)
-        return None
+        raise NotFoundYInitialDataError(f"Not found y_initial_data: {video_id}")
 
     @staticmethod
     def extract_view_count_from_y_initial_data(y_initial_data: dict) -> int:
@@ -63,15 +91,13 @@ class YInitialDataClient:
         return collaborated_ids
 
     @classmethod
-    def from_y_initial_data_dict_to_obj(cls, y_initial_data: dict) -> VideoStatistics:
-        return VideoStatistics(
+    def get_from_video_id(cls, video_id: str) -> YInitialDataResult:
+        # "collaborated_channel_ids" can be contained self channel id!
+        y_initial_data = cls.get_y_initial_data_from_video_id(video_id)
+        return YInitialDataResult(
+            video_id=video_id,
             view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
             like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
             dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
             collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(y_initial_data)
         )
-
-    @classmethod
-    def get_y_initial_data_obj_from_video_id(cls, video_id: str) -> VideoStatistics:
-        y_initial_data = cls.get_y_initial_data_dict_from_video_id(video_id)
-        return cls.from_y_initial_data_dict_to_obj(y_initial_data)
