@@ -48,20 +48,20 @@ class VideoModel:
 
 class VideoRepository:
     @staticmethod
-    def store_videos_data_of_channel_id(channel_id: str) -> None:
+    def store_video_rows_of_channel_id(channel_id: str) -> None:
         file_path = f"data/youtube_data_api/search/{channel_id}.json"
         if os.path.exists(file_path):
-            videos_data = YoutubeDataAPIClient.read_videos_data_from_file(file_path)
+            video_rows = YoutubeDataAPIClient.read_video_rows_from_file(file_path)
         else:
-            videos_data = YoutubeDataAPIClient.get_videos_data_from_channel_id(channel_id)
-        rows_data = list(map(lambda vd: vd.to_query_param(), videos_data))
-        VideoDBClient.insert_rows_into_video_table(rows_data)
+            video_rows = YoutubeDataAPIClient.get_video_rows_from_channel_id(channel_id)
+        query_params = list(map(lambda vr: vr.to_query_param(), video_rows))
+        VideoDBClient.insert_rows_into_video_table(query_params)
 
     @classmethod
     def load_videos_data_into_db(cls) -> None:
         channel_ids = ChannelRepository.get_channel_ids()
         for cid in channel_ids:
-            cls.store_videos_data_of_channel_id(cid)
+            cls.store_video_rows_of_channel_id(cid)
 
     @staticmethod
     def get_video_data_from_video_id(video_id: str) -> VideoRow:

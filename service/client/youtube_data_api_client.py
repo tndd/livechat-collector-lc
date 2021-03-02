@@ -57,7 +57,7 @@ class YoutubeDataAPIClient:
         return search_list
 
     @staticmethod
-    def convert_search_list_to_video_data(search_list: List[dict]) -> List[VideoRow]:
+    def convert_search_list_to_video_rows(search_list: List[dict]) -> List[VideoRow]:
         return list(map(lambda d: (
             VideoRow(
                 id=d['id']['videoId'],
@@ -68,15 +68,15 @@ class YoutubeDataAPIClient:
         ), search_list))
 
     @classmethod
-    def get_videos_data_from_channel_id(cls, channel_id: str) -> List[VideoRow]:
+    def get_video_rows_from_channel_id(cls, channel_id: str) -> List[VideoRow]:
         search_list = cls.get_channel_search_list_from_channel_id(channel_id)
-        videos_data = cls.convert_search_list_to_video_data(search_list)
+        videos_data = cls.convert_search_list_to_video_rows(search_list)
         return videos_data
 
     @classmethod
-    def read_videos_data_from_file(cls, file_path: str) -> List[VideoRow]:
+    def read_video_rows_from_file(cls, file_path: str) -> List[VideoRow]:
         # this is a temporary method. so it will be removed.
         with open(file_path, 'r') as f:
             search_list = json.load(f)
-        videos_data = cls.convert_search_list_to_video_data(search_list)
+        videos_data = cls.convert_search_list_to_video_rows(search_list)
         return videos_data
