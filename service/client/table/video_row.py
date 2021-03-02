@@ -3,13 +3,13 @@ from datetime import datetime
 
 
 @dataclass
-class VideoData:
+class VideoRow:
     id: str
     channel_id: str
     published_at: datetime
     title: str
 
-    def to_row_video_table(self) -> tuple:
+    def to_query_param(self) -> tuple:
         return (
             self.id,
             self.channel_id,

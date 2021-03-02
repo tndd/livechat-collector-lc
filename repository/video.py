@@ -9,7 +9,7 @@ from service.client.video_db_client import VideoDBClient
 from service.client.y_initial_data_client import YInitialDataClient
 from service.client.youtube_data_api_client import YoutubeDataAPIClient
 from repository.channel import ChannelRepository
-from service.client.table.video_data import VideoData
+from service.client.table.video_row import VideoRow
 
 # TODO: tmp
 from youtube_data_api import load_youtube_data_api_search_list
@@ -54,7 +54,7 @@ class VideoRepository:
             videos_data = YoutubeDataAPIClient.read_videos_data_from_file(file_path)
         else:
             videos_data = YoutubeDataAPIClient.get_videos_data_from_channel_id(channel_id)
-        rows_data = list(map(lambda vd: vd.to_row_video_table(), videos_data))
+        rows_data = list(map(lambda vd: vd.to_query_param(), videos_data))
         VideoDBClient.insert_rows_into_video_table(rows_data)
 
     @classmethod
@@ -64,9 +64,9 @@ class VideoRepository:
             cls.store_videos_data_of_channel_id(cid)
 
     @staticmethod
-    def get_video_data_from_video_id(video_id: str) -> VideoData:
+    def get_video_data_from_video_id(video_id: str) -> VideoRow:
         row = VideoDBClient.select_row_from_video_table(video_id)
-        return VideoData(
+        return VideoRow(
             id=row[0],
             channel_id=row[1],
             published_at=row[2],

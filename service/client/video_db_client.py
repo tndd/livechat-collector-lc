@@ -3,7 +3,7 @@ from typing import List
 from mysql.connector.cursor_cext import CMySQLCursor
 
 from service.db import mysql_query
-from service.client.table.video_data import VideoData
+from service.client.table.video_row import VideoRow
 
 
 @dataclass
@@ -28,7 +28,7 @@ class VideoDBClient:
     @mysql_query
     def select_row_from_video_table(
             cursor: CMySQLCursor,
-            video_id: str) -> VideoData:
+            video_id: str) -> VideoRow:
         query = """
         SELECT id, channel_id, published_at, title
         FROM livechat_collector.video

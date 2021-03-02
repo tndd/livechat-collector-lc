@@ -3,7 +3,7 @@ import json
 from typing import List
 
 from service.client.channel_db_client import ChannelDBClient
-from service.client.table.channel_data import ChannelData
+from service.client.table.channel_row import ChannelRow
 
 
 class ChannelRepository:
@@ -19,7 +19,7 @@ class ChannelRepository:
         channels_data = []
         for code, data in channels_obj.items():
             channels_data.append(
-                ChannelData(
+                ChannelRow(
                     id=data['id'],
                     code=code,
                     name=data['name']
@@ -28,7 +28,7 @@ class ChannelRepository:
         ChannelDBClient.insert_channels_data_into_channel_table(channels_data)
 
     @classmethod
-    def get_channels_data(cls) -> List[ChannelData]:
+    def get_channels_data(cls) -> List[ChannelRow]:
         channels_data = ChannelDBClient.select_channels_data()
         return channels_data
 

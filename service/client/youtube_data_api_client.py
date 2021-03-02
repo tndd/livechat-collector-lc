@@ -6,7 +6,7 @@ import googleapiclient.discovery
 from typing import Optional, Tuple, List
 from datetime import datetime
 
-from service.client.table.video_data import VideoData
+from service.client.table.video_row import VideoRow
 
 
 class YoutubeDataAPIClient:
@@ -57,9 +57,9 @@ class YoutubeDataAPIClient:
         return search_list
 
     @staticmethod
-    def convert_search_list_to_video_data(search_list: List[dict]) -> List[VideoData]:
+    def convert_search_list_to_video_data(search_list: List[dict]) -> List[VideoRow]:
         return list(map(lambda d: (
-            VideoData(
+            VideoRow(
                 id=d['id']['videoId'],
                 channel_id=d['snippet']['channelId'],
                 published_at=datetime.strptime(d['snippet']['publishedAt'], '%Y-%m-%dT%H:%M:%SZ'),
@@ -68,13 +68,13 @@ class YoutubeDataAPIClient:
         ), search_list))
 
     @classmethod
-    def get_videos_data_from_channel_id(cls, channel_id: str) -> List[VideoData]:
+    def get_videos_data_from_channel_id(cls, channel_id: str) -> List[VideoRow]:
         search_list = cls.get_channel_search_list_from_channel_id(channel_id)
         videos_data = cls.convert_search_list_to_video_data(search_list)
         return videos_data
 
     @classmethod
-    def read_videos_data_from_file(cls, file_path: str) -> List[VideoData]:
+    def read_videos_data_from_file(cls, file_path: str) -> List[VideoRow]:
         # this is a temporary method. so it will be removed.
         with open(file_path, 'r') as f:
             search_list = json.load(f)

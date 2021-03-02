@@ -2,13 +2,13 @@ from dataclasses import dataclass
 
 
 @dataclass
-class VideoStatistics:
+class VideoStatisticsRow:
     video_id: str
     view_count: int
     like_count: int
     dislike_count: int
 
-    def to_row(self) -> tuple:
+    def to_query_param(self) -> tuple:
         return (
             self.video_id,
             self.view_count,
