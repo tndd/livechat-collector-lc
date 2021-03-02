@@ -14,7 +14,7 @@ class ChannelRepository:
         return channels_obj
 
     @classmethod
-    def load_channel_models_into_db_from_file(cls) -> None:
+    def load_channel_rows_into_db_from_file(cls) -> None:
         channels_obj = cls.read_channels_obj_from_file('./channel.json')
         channels_data = []
         for code, data in channels_obj.items():

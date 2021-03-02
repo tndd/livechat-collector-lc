@@ -58,13 +58,13 @@ class VideoRepository:
         VideoDBClient.insert_rows_into_video_table(query_params)
 
     @classmethod
-    def load_videos_data_into_db(cls) -> None:
+    def load_all_channel_video_rows_into_db(cls) -> None:
         channel_ids = ChannelRepository.get_channel_ids()
         for cid in channel_ids:
             cls.store_video_rows_of_channel_id(cid)
 
     @staticmethod
-    def get_video_data_from_video_id(video_id: str) -> VideoRow:
+    def get_video_row_from_video_id(video_id: str) -> VideoRow:
         row = VideoDBClient.select_row_from_video_table(video_id)
         return VideoRow(
             id=row[0],
