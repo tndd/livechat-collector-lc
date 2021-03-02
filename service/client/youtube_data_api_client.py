@@ -5,8 +5,26 @@ import googleapiclient.discovery
 
 from typing import Optional, Tuple, List
 from datetime import datetime
+from dataclasses import dataclass
+from dotenv import load_dotenv
 
-from service.client.table.video_row import VideoRow
+load_dotenv('.env')
+
+
+@dataclass
+class YoutubeDataAPiResult:
+    id: str
+    channel_id: str
+    published_at: datetime
+    title: str
+
+    def to_param(self) -> tuple:
+        return (
+            self.id,
+            self.channel_id,
+            self.published_at.strftime('%Y-%m-%d %H:%M:%S'),
+            self.title
+        )
 
 
 class YoutubeDataAPIClient:
@@ -57,9 +75,9 @@ class YoutubeDataAPIClient:
         return search_list
 
     @staticmethod
-    def convert_search_list_to_video_rows(search_list: List[dict]) -> List[VideoRow]:
+    def convert_search_list_to_results(search_list: List[dict]) -> List[YoutubeDataAPiResult]:
         return list(map(lambda d: (
-            VideoRow(
+            YoutubeDataAPiResult(
                 id=d['id']['videoId'],
                 channel_id=d['snippet']['channelId'],
                 published_at=datetime.strptime(d['snippet']['publishedAt'], '%Y-%m-%dT%H:%M:%SZ'),
@@ -68,15 +86,13 @@ class YoutubeDataAPIClient:
         ), search_list))
 
     @classmethod
-    def get_video_rows_from_channel_id(cls, channel_id: str) -> List[VideoRow]:
+    def get_from_channel_id(cls, channel_id: str) -> List[YoutubeDataAPiResult]:
         search_list = cls.get_channel_search_list_from_channel_id(channel_id)
-        videos_data = cls.convert_search_list_to_video_rows(search_list)
-        return videos_data
+        return cls.convert_search_list_to_results(search_list)
 
     @classmethod
-    def read_video_rows_from_file(cls, file_path: str) -> List[VideoRow]:
+    def read_from_file(cls, file_path: str) -> List[YoutubeDataAPiResult]:
         # this is a temporary method. so it will be removed.
         with open(file_path, 'r') as f:
             search_list = json.load(f)
-        videos_data = cls.convert_search_list_to_video_rows(search_list)
-        return videos_data
+        return cls.convert_search_list_to_results(search_list)
