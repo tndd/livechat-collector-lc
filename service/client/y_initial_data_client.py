@@ -17,20 +17,6 @@ class YInitialDataResult:
     dislike_count: int
     collaborated_channel_ids: List[str]
 
-    def to_param_statistics(self) -> tuple:
-        return (
-            self.video_id,
-            self.view_count,
-            self.like_count,
-            self.dislike_count
-        )
-
-    def to_param_collaborated_ids(self) -> List[tuple]:
-        return list(map(lambda cid: (
-            self.video_id,
-            cid
-        ), self.collaborated_channel_ids))
-
 
 class NotFoundYInitialDataError(Exception):
     pass
