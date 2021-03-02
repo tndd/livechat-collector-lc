@@ -1,6 +1,6 @@
 import os
 
-from service.client.video_db_client import VideoDBClient, VideoData, VideoStatisticsData
+from service.client.video_db_client import VideoDBClient, VideoData, VideoStatisticsData, VideoCollaboratedChannelId
 from service.client.youtube_data_api_client import YoutubeDataAPIClient
 from service.client.y_initial_data_client import YInitialDataClient
 from repository.channel import ChannelRepository
@@ -22,19 +22,35 @@ class VideoRepository:
         ), youtube_data_api_results))
         VideoDBClient.insert_videos_data(videos_data)
 
-    @staticmethod
-    def store_video_statistics_of_video_id(video_id: str) -> None:
+    @classmethod
+    def store_y_initial_data_result_of_video_id(cls, video_id: str) -> None:
         y_initial_data_result = YInitialDataClient.get_from_video_id(video_id)
-        video_statistics_data = VideoStatisticsData(
+        video_statistics = VideoStatisticsData(
             video_id=y_initial_data_result.video_id,
             view_count=y_initial_data_result.view_count,
             like_count=y_initial_data_result.like_count,
             dislike_count=y_initial_data_result.dislike_count
         )
-        VideoDBClient.insert_video_statistics(video_statistics_data)
+        # except self channel id
+        self_channel_id = VideoRepository.get_channel_id_of_video(video_id)
+        collaborated_channel_ids_except_self = [
+            cid for cid in y_initial_data_result.collaborated_channel_ids
+            if cid != self_channel_id
+        ]
+        video_collaborated_channel_ids = list(map(lambda cid: VideoCollaboratedChannelId(
+            video_id=video_id,
+            channel_id=cid
+        ), collaborated_channel_ids_except_self))
+        VideoDBClient.insert_video_statistics(video_statistics)
+        VideoDBClient.insert_video_collaborated_channel_ids(video_collaborated_channel_ids)
 
     @classmethod
     def load_all_channel_videos_data_into_db(cls) -> None:
         channel_ids = ChannelRepository.get_channel_ids()
         for cid in channel_ids:
             cls.store_videos_data_of_channel_id(cid)
+
+    @staticmethod
+    def get_channel_id_of_video(video_id: str) -> str:
+        video_data = VideoDBClient.select_video_data_from_video_id(video_id)
+        return video_data.channel_id

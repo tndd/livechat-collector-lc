@@ -2,7 +2,7 @@ import requests
 import re
 import json
 
-from typing import Optional, List
+from typing import List
 from bs4 import BeautifulSoup
 from dataclasses import dataclass
 
@@ -78,7 +78,6 @@ class YInitialDataClient:
 
     @classmethod
     def get_from_video_id(cls, video_id: str) -> YInitialDataResult:
-        # "collaborated_channel_ids" can be contained self channel id!
         y_initial_data = cls.get_y_initial_data_from_video_id(video_id)
         return YInitialDataResult(
             video_id=video_id,

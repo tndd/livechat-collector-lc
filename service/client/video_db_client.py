@@ -39,12 +39,24 @@ class VideoStatisticsData:
 
 
 @dataclass
+class VideoCollaboratedChannelId:
+    video_id: str
+    channel_id: str
+
+    def to_param(self) -> tuple:
+        return (
+            self.video_id,
+            self.channel_id
+        )
+
+
+@dataclass
 class VideoDBClient:
     @staticmethod
     @mysql_query
     def insert_videos_data(
             cursor: CMySQLCursor,
-            videos_data: List[tuple]) -> None:
+            videos_data: List[VideoData]) -> None:
         query = """
         INSERT IGNORE INTO livechat_collector.video(
             id,
@@ -64,7 +76,7 @@ class VideoDBClient:
             video_statistics: VideoStatisticsData
     ) -> None:
         query = """
-        INSERT INTO livechat_collector.video_statistics (
+        INSERT IGNORE INTO livechat_collector.video_statistics (
             video_id,
             view_count,
             like_count,
@@ -72,6 +84,21 @@ class VideoDBClient:
         ) VALUES(%s, %s, %s, %s);
         """
         cursor.execute(query, video_statistics.to_param())
+
+    @staticmethod
+    @mysql_query
+    def insert_video_collaborated_channel_ids(
+            cursor: CMySQLCursor,
+            video_collaborated_channel_ids: List[VideoCollaboratedChannelId]
+    ) -> None:
+        query = """
+        INSERT IGNORE INTO livechat_collector.video_collaborated_channel_id (
+            video_id,
+            collaborated_channel_id
+        ) VALUES(%s, %s);
+        """
+        rows_data = list(map(lambda x: x.to_param(), video_collaborated_channel_ids))
+        cursor.executemany(query, rows_data)
 
     @staticmethod
     @mysql_query
@@ -91,17 +118,3 @@ class VideoDBClient:
             published_at=row[2],
             title=row[3]
         )
-
-    @staticmethod
-    @mysql_query
-    def insert_rows_into_video_collaborated_channel_ids_table(
-            cursor: CMySQLCursor,
-            rows_data: List[tuple]
-    ) -> None:
-        query = """
-        INSERT IGNORE INTO livechat_collector.video_collaborated_channel_id (
-            video_id,
-            collaborated_channel_id
-        ) VALUES(%s, %s);
-        """
-        cursor.executemany(query, rows_data)
