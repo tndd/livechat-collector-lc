@@ -1,9 +1,25 @@
 import os
 
+from typing import List
+from dataclasses import dataclass
+from datetime import datetime
+
 from service.client.video_db_client import VideoDBClient, VideoData, VideoStatisticsData, VideoCollaboratedChannelId
 from service.client.youtube_data_api_client import YoutubeDataAPIClient
 from service.client.y_initial_data_client import YInitialDataClient
 from repository.channel import ChannelRepository
+
+
+@dataclass
+class Video:
+    id: str
+    channel_id: str
+    published_at: datetime
+    title: str
+    view_count: int
+    like_count: int
+    dislike_count: int
+    collaborated_channel_ids: List[str]
 
 
 class VideoRepository:
@@ -49,7 +65,31 @@ class VideoRepository:
         for cid in channel_ids:
             cls.store_videos_data_of_channel_id(cid)
 
+    @classmethod
+    def load_y_initial_data_list_result_of_channel_id_into_db(cls, channel_id: str):
+        video_ids = cls.get_video_ids_of_channel_id(channel_id)
+        for video_id in video_ids:
+            print(video_id)
+            try:
+                cls.store_y_initial_data_of_video_id(video_id)
+            except Exception:
+                print(f"skipped")
+                continue
+
+    @classmethod
+    def load_channels_into_db(cls) -> None:
+        cls.load_all_channel_videos_data_into_db()
+        channel_ids = ChannelRepository.get_channel_ids()
+        for cid in channel_ids:
+            print(cid)
+            cls.load_y_initial_data_list_result_of_channel_id_into_db(cid)
+
     @staticmethod
     def get_channel_id_of_video(video_id: str) -> str:
         video_data = VideoDBClient.select_video_data_from_video_id(video_id)
         return video_data.channel_id
+
+    @staticmethod
+    def get_video_ids_of_channel_id(channel_id: str) -> List[str]:
+        videos_data = VideoDBClient.select_videos_data_of_channel_id(channel_id)
+        return list(map(lambda vd: vd.id, videos_data))
