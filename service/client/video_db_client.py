@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from mysql.connector.cursor_cext import CMySQLCursor
 
@@ -139,3 +139,25 @@ class VideoDBClient:
                 title=row[3]
             )
         ), rows))
+
+    @staticmethod
+    @mysql_query
+    def select_video_statistics_of_video_id(
+            cursor: CMySQLCursor,
+            video_id: str
+    ) -> Optional[VideoStatisticsData]:
+        query = """
+        SELECT video_id, view_count, like_count, dislike_count
+        FROM livechat_collector.video_statistics
+        WHERE video_id = %s;
+        """
+        cursor.execute(query, (video_id,))
+        row = cursor.fetchone()
+        if row is None:
+            return None
+        return VideoStatisticsData(
+            video_id=row[0],
+            view_count=row[1],
+            like_count=row[2],
+            dislike_count=row[3]
+        )

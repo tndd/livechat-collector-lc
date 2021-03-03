@@ -23,7 +23,10 @@ class VideoRepository:
         VideoDBClient.insert_videos_data(videos_data)
 
     @classmethod
-    def store_y_initial_data_result_of_video_id(cls, video_id: str) -> None:
+    def store_y_initial_data_of_video_id(cls, video_id: str) -> None:
+        if VideoDBClient.select_video_statistics_of_video_id(video_id) is not None:
+            print(f"video_id: {video_id} is already exist in db.")
+            return
         y_initial_data_result = YInitialDataClient.get_from_video_id(video_id)
         video_statistics = VideoStatisticsData(
             video_id=y_initial_data_result.video_id,
