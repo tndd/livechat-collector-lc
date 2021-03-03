@@ -24,7 +24,8 @@ class VideoRepository:
 
     @classmethod
     def store_y_initial_data_result_of_video_id(cls, video_id: str) -> None:
-        y_initial_data_result = YInitialDataClient.get_from_video_id(video_id)
+        channel_ids = ChannelRepository.get_channel_ids()
+        y_initial_data_result = YInitialDataClient.get_from_video_id(video_id, channel_ids)
         video_statistics = VideoStatisticsData(
             video_id=y_initial_data_result.video_id,
             view_count=y_initial_data_result.view_count,
