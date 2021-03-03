@@ -24,24 +24,19 @@ class VideoRepository:
 
     @classmethod
     def store_y_initial_data_result_of_video_id(cls, video_id: str) -> None:
-        channel_ids = ChannelRepository.get_channel_ids()
-        y_initial_data_result = YInitialDataClient.get_from_video_id(video_id, channel_ids)
+        y_initial_data_result = YInitialDataClient.get_from_video_id(video_id)
         video_statistics = VideoStatisticsData(
             video_id=y_initial_data_result.video_id,
             view_count=y_initial_data_result.view_count,
             like_count=y_initial_data_result.like_count,
             dislike_count=y_initial_data_result.dislike_count
         )
-        # except self channel id
+        channel_ids = ChannelRepository.get_channel_ids()
         self_channel_id = VideoRepository.get_channel_id_of_video(video_id)
-        collaborated_channel_ids_except_self = [
-            cid for cid in y_initial_data_result.collaborated_channel_ids
-            if cid != self_channel_id
-        ]
         video_collaborated_channel_ids = list(map(lambda cid: VideoCollaboratedChannelId(
             video_id=video_id,
             channel_id=cid
-        ), collaborated_channel_ids_except_self))
+        ), y_initial_data_result.collaborated_channel_ids(channel_ids, self_channel_id)))
         VideoDBClient.insert_video_statistics(video_statistics)
         VideoDBClient.insert_video_collaborated_channel_ids(video_collaborated_channel_ids)
 

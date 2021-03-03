@@ -13,7 +13,18 @@ class YInitialDataResult:
     view_count: int
     like_count: int
     dislike_count: int
-    collaborated_channel_ids: List[str]
+    description: str
+
+    def collaborated_channel_ids(
+            self,
+            channel_ids: List[str],
+            except_channel_id: str
+    ) -> List[str]:
+        collaborated_ids = []
+        for channel_id in channel_ids:
+            if channel_id in self.description:
+                collaborated_ids.append(channel_id)
+        return [cid for cid in collaborated_ids if cid != except_channel_id]
 
 
 class NotFoundYInitialDataError(Exception):
@@ -63,30 +74,19 @@ class YInitialDataClient:
         return int(like_count)
 
     @staticmethod
-    def extract_collaborated_channel_ids_from_y_initial_data(
-            y_initial_data: dict,
-            channel_ids: List[str]
-    ) -> List[str]:
+    def extract_description_from_y_initial_data(y_initial_data: dict) -> str:
         description_data = \
             y_initial_data['contents']['twoColumnWatchNextResults']['results']['results']['contents'][1][
                 'videoSecondaryInfoRenderer']['description']['runs']
-        description_text = json.dumps(description_data)
-        collaborated_ids = []
-        for channel_id in channel_ids:
-            if channel_id in description_text:
-                collaborated_ids.append(channel_id)
-        return collaborated_ids
+        return json.dumps(description_data)
 
     @classmethod
-    def get_from_video_id(cls, video_id: str, channel_ids: List[str]) -> YInitialDataResult:
+    def get_from_video_id(cls, video_id: str) -> YInitialDataResult:
         y_initial_data = cls.get_y_initial_data_from_video_id(video_id)
         return YInitialDataResult(
             video_id=video_id,
             view_count=cls.extract_view_count_from_y_initial_data(y_initial_data),
             like_count=cls.extract_like_count_from_y_initial_data(y_initial_data),
             dislike_count=cls.extract_dislike_count_from_y_initial_data(y_initial_data),
-            collaborated_channel_ids=cls.extract_collaborated_channel_ids_from_y_initial_data(
-                y_initial_data,
-                channel_ids
-            )
+            description=cls.extract_description_from_y_initial_data(y_initial_data)
         )
