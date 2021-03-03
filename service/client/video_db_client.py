@@ -118,3 +118,24 @@ class VideoDBClient:
             published_at=row[2],
             title=row[3]
         )
+
+    @staticmethod
+    @mysql_query
+    def select_videos_data_of_channel_id(
+            cursor: CMySQLCursor,
+            channel_id: str) -> List[VideoData]:
+        query = """
+            SELECT id, channel_id, published_at, title
+            FROM livechat_collector.video
+            WHERE channel_id = %s;
+            """
+        cursor.execute(query, (channel_id,))
+        rows = cursor.fetchall()
+        return list(map(lambda row: (
+            VideoData(
+                id=row[0],
+                channel_id=row[1],
+                published_at=row[2],
+                title=row[3]
+            )
+        ), rows))
